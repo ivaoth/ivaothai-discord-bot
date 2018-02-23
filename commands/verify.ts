@@ -1,6 +1,7 @@
 import * as Discord from 'discord.js';
 import * as admin from 'firebase-admin';
 import { stripIndents } from 'common-tags';
+import { URL } from 'url';
 
 export const handleVerify = (
   message: Discord.Message,
