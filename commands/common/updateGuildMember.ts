@@ -25,7 +25,7 @@ export const updateGuildMember = (
         }
         let newNickname = `${prefix} ${suffix}`;
         if (value.division !== 'TH') {
-          newNickname = newNickname.substr(0, 28) + ` - ${value.division}`;
+          newNickname = newNickname.substr(0, 27) + ` - ${value.division}`;
         }
         if (newNickname !== guildMember.nickname) {
           guildMember.setNickname(newNickname.substr(0, 32)).catch(() => {
