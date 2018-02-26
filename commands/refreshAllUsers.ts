@@ -6,7 +6,9 @@ export const handleRefreshAllUsers = (
   message: Discord.Message,
   client: Discord.Client,
   guild: Discord.Guild,
-  verifiedRole: Discord.Role
+  verifiedRole: Discord.Role,
+  thailandDivisionRole: Discord.Role,
+  otherDivisionRole: Discord.Role
 ) => {
   const authorId = message.author.id;
   admin
@@ -29,7 +31,9 @@ export const handleRefreshAllUsers = (
                         .ref('users')
                         .child(data!.key!),
                       member,
-                      verifiedRole
+                      verifiedRole,
+                      thailandDivisionRole,
+                      otherDivisionRole
                     );
                   },
                   err => {

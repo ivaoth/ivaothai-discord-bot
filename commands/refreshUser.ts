@@ -6,7 +6,9 @@ export const handleRefreshUser = (
   message: Discord.Message,
   client: Discord.Client,
   guild: Discord.Guild,
-  verifiedRole: Discord.Role
+  verifiedRole: Discord.Role,
+  thailandDivisionRole: Discord.Role,
+  otherDivisionRole: Discord.Role
 ) => {
   const authorId = message.author.id;
   admin
@@ -26,7 +28,13 @@ export const handleRefreshUser = (
                   .child(userId);
                 userRef.once('value', data => {
                   if (data.exists()) {
-                    updateGuildMember(userRef, member, verifiedRole);
+                    updateGuildMember(
+                      userRef,
+                      member,
+                      verifiedRole,
+                      thailandDivisionRole,
+                      otherDivisionRole
+                    );
                   } else {
                     message.author.createDM().then(dm => {
                       dm.send('No user data found.');

@@ -5,6 +5,8 @@ export const updateGuildMember = (
   userDataRef: admin.database.Reference,
   guildMember: Discord.GuildMember,
   verifiedRole: Discord.Role,
+  thailandDivisionRole: Discord.Role,
+  otherDivisionRole: Discord.Role,
   notifyServerOwner: boolean = false
 ) => {
   return new Promise((resolve, reject) => {
@@ -26,6 +28,9 @@ export const updateGuildMember = (
         let newNickname = `${prefix} ${suffix}`;
         if (value.division !== 'TH') {
           newNickname = newNickname.substr(0, 27) + ` - ${value.division}`;
+          guildMember.addRole(otherDivisionRole);
+        } else {
+          guildMember.addRole(thailandDivisionRole);
         }
         if (newNickname !== guildMember.nickname) {
           guildMember.setNickname(newNickname.substr(0, 32)).catch(() => {

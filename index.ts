@@ -25,6 +25,8 @@ const log = logging.log('ivao-th-bot');
 
 let guild: Discord.Guild;
 let verifiedRole: Discord.Role;
+let thailandDivisionRole: Discord.Role;
+let otherDivisionRole: Discord.Role;
 let generalChannel: Discord.TextChannel;
 
 const privkey = JSON.parse(process.env['FIREBASE_CREDENTIALS'] as string);
@@ -38,6 +40,12 @@ client.on('ready', () => {
   console.log('Bot is running');
   guild = client.guilds.get(process.env['IVAOTHAI_GUILD'] as string)!;
   verifiedRole = guild.roles.get(process.env['VERIFIED_ROLE'] as string)!;
+  thailandDivisionRole = guild.roles.get(process.env[
+    'THAILAND_DIVISION_ROLE'
+  ] as string)!;
+  otherDivisionRole = guild.roles.get(process.env[
+    'OTHER_DIVISION_ROLE'
+  ] as string)!;
   generalChannel = guild.channels.get(process.env[
     'GENERAL_CHANNEL'
   ] as string)! as Discord.TextChannel;
@@ -59,11 +67,25 @@ client.on('message', message => {
     } else if (message.content.startsWith('!nickname')) {
       handleNicknameChange(message, generalChannel, log);
     } else if (message.content.startsWith('!refreshUser')) {
-      handleRefreshUser(message, client, guild, verifiedRole);
+      handleRefreshUser(
+        message,
+        client,
+        guild,
+        verifiedRole,
+        thailandDivisionRole,
+        otherDivisionRole
+      );
     } else if (message.content === '!notifyNotLinked') {
       handleNotLinked(message, guild, verifiedRole);
     } else if (message.content === '!refreshAllUsers') {
-      handleRefreshAllUsers(message, client, guild, verifiedRole);
+      handleRefreshAllUsers(
+        message,
+        client,
+        guild,
+        verifiedRole,
+        thailandDivisionRole,
+        otherDivisionRole
+      );
     } else {
       handleElse(message, generalChannel);
     }
@@ -78,7 +100,9 @@ client.on('guildMemberUpdate', (oldMember, newMember) => {
         .ref('users')
         .child(newMember.id.toString()),
       newMember,
-      verifiedRole
+      verifiedRole,
+      thailandDivisionRole,
+      otherDivisionRole
     );
   }
 });
@@ -91,7 +115,13 @@ client.on('guildMemberAdd', newMember => {
     .child(userId);
   userRef.once('value', data => {
     if (data.exists()) {
-      updateGuildMember(userRef, newMember, verifiedRole);
+      updateGuildMember(
+        userRef,
+        newMember,
+        verifiedRole,
+        thailandDivisionRole,
+        otherDivisionRole
+      );
     } else {
       newMember.createDM().then(dm => {
         notifyNotLinked(dm);
@@ -117,6 +147,8 @@ admin
               .child(newUser),
             guildMember,
             verifiedRole,
+            thailandDivisionRole,
+            otherDivisionRole,
             true
           ).then(() => {
             if (_newUser) {
