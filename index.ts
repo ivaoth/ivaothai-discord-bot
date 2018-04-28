@@ -28,6 +28,11 @@ let verifiedRole: Discord.Role;
 let thailandDivisionRole: Discord.Role;
 let otherDivisionRole: Discord.Role;
 let generalChannel: Discord.TextChannel;
+let atcOnlineChannel: Discord.TextChannel;
+
+let firstTime = true;
+let thailandAtcCallsigns: string[] = [];
+let thailandAtcs: any[] = [];
 
 const privkey = JSON.parse(process.env['FIREBASE_CREDENTIALS'] as string);
 
@@ -48,6 +53,9 @@ client.on('ready', () => {
   ] as string)!;
   generalChannel = guild.channels.get(process.env[
     'GENERAL_CHANNEL'
+  ] as string)! as Discord.TextChannel;
+  atcOnlineChannel = guild.channels.get(process.env[
+    'ATC_ONLINE_CHANNEL'
   ] as string)! as Discord.TextChannel;
   client.user.setAvatar(readFileSync('./TH.png'));
   const entry = log.entry(null, 'Bot started');
@@ -158,6 +166,53 @@ admin
         });
       }
     });
+  });
+
+admin
+  .firestore()
+  .collection('whazzup')
+  .doc('status')
+  .onSnapshot(async snap => {
+    const clients: any[] = (await admin
+      .firestore()
+      .collection('whazzup')
+      .doc('clients')
+      .get()).data()!.clients;
+    const newThailandAtcs = clients.filter(
+      c => c.type === 'atc' && c.callsign.startsWith('VT')
+    );
+    const newThailandAtcCallsigns: string[] = newThailandAtcs.map(
+      c => c.callsign
+    );
+    const newlyOnline = newThailandAtcs.filter(
+      c => thailandAtcCallsigns.indexOf(c.callsign) === -1
+    );
+    const newlyOffline = thailandAtcs.filter(
+      c => newThailandAtcCallsigns.indexOf(c.callsign) === -1
+    );
+    if (firstTime) {
+      firstTime = false;
+    } else {
+      let outText = '';
+      if (newlyOnline.length > 0) {
+        outText += 'New ATC online\n\n';
+        for (const atc of newlyOnline) {
+          outText += `${atc.callsign} (${atc.vid})\n`;
+        }
+        outText += '\n';
+      }
+      if (newlyOffline.length > 0) {
+        outText += 'ATC gone offline\n\n';
+        for (const atc of newlyOffline) {
+          outText += `${atc.callsign} (${atc.vid})\n`;
+        }
+        outText += '\n';
+      }
+      outText += `Reported at ${new Date()}`;
+      atcOnlineChannel.send(outText);
+    }
+    thailandAtcCallsigns = newThailandAtcCallsigns;
+    thailandAtcs = newThailandAtcs;
   });
 
 client.login(process.env['BOT_TOKEN']);
