@@ -193,23 +193,25 @@ admin
     if (firstTime) {
       firstTime = false;
     } else {
-      let outText = '';
-      if (newlyOnline.length > 0) {
-        outText += 'New ATC online\n\n';
-        for (const atc of newlyOnline) {
-          outText += `${atc.callsign} (${atc.vid})\n`;
+      if (newlyOnline.length > 0 && newlyOffline.length > 0) {
+        let outText = '';
+        if (newlyOnline.length > 0) {
+          outText += 'New ATC online\n\n';
+          for (const atc of newlyOnline) {
+            outText += `${atc.callsign} (${atc.vid})\n`;
+          }
+          outText += '\n';
         }
-        outText += '\n';
-      }
-      if (newlyOffline.length > 0) {
-        outText += 'ATC gone offline\n\n';
-        for (const atc of newlyOffline) {
-          outText += `${atc.callsign} (${atc.vid})\n`;
+        if (newlyOffline.length > 0) {
+          outText += 'ATC gone offline\n\n';
+          for (const atc of newlyOffline) {
+            outText += `${atc.callsign} (${atc.vid})\n`;
+          }
+          outText += '\n';
         }
-        outText += '\n';
+        outText += `Reported at ${new Date()}`;
+        atcOnlineChannel.send(outText);
       }
-      outText += `Reported at ${new Date()}`;
-      atcOnlineChannel.send(outText);
     }
     thailandAtcCallsigns = newThailandAtcCallsigns;
     thailandAtcs = newThailandAtcs;
