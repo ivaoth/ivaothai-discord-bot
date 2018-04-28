@@ -42,11 +42,11 @@ const pilotRatings = {
 
 const parseClient = (line: string) => {
   const fields = line.split(':');
-  console.log(line);
   const client: any = {};
   client.callsign = fields[0];
   client.vid = fields[1];
   client.type = fields.length === 49 ? fields[3].toLowerCase() : 'skip';
+  client.name = fields[2];
   client.connectionTime = fields[37];
   client.softwareName = fields[38];
   client.softwareVersion = fields[39];
@@ -88,7 +88,6 @@ const parseClient = (line: string) => {
         client.pob = parseInt(fields[44]);
       }
   }
-  console.log(client);
   return client;
 };
 
@@ -119,16 +118,66 @@ const parseData = async (data: string) => {
       }
     }
   }
-  await admin
+  const oldCallsignsRef = admin
     .firestore()
     .collection('whazzup')
     .doc('clients')
-    .set({ clients });
-  await admin
-    .firestore()
-    .collection('whazzup')
-    .doc('status')
-    .set(status);
+    .get();
+  const oldCallsigns = (await oldCallsignsRef).exists
+    ? (await oldCallsignsRef).data().callsigns
+    : [];
+  const newCallsigns = clients.map(client => client.callsign);
+  let batch = admin.firestore().batch();
+  let count = 0;
+  batch.set(
+    admin
+      .firestore()
+      .collection('whazzup')
+      .doc('clients'),
+    { callsigns: newCallsigns }
+  );
+  count++;
+  for (const client of clients) {
+    batch.set(
+      admin
+        .firestore()
+        .collection('whazzup')
+        .doc('clients')
+        .collection('clients')
+        .doc(client.callsign),
+      client
+    );
+    count++;
+    if (count === 500) {
+      await batch.commit();
+      batch = admin.firestore().batch();
+    }
+  }
+  for (const callsign of oldCallsigns) {
+    if (newCallsigns.indexOf(callsign) === -1) {
+      batch.delete(
+        admin
+          .firestore()
+          .collection('whazzup')
+          .doc('clients')
+          .collection('clients')
+          .doc(callsign)
+      );
+      count++;
+      if (count === 500) {
+        await batch.commit();
+        batch = admin.firestore().batch();
+      }
+    }
+  }
+  batch.set(
+    admin
+      .firestore()
+      .collection('whazzup')
+      .doc('status'),
+    status
+  );
+  await batch.commit();
 };
 
 export const whazzup = functions.https.onRequest(async (req, resp) => {
