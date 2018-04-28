@@ -193,7 +193,7 @@ admin
     if (firstTime) {
       firstTime = false;
     } else {
-      if (newlyOnline.length > 0 && newlyOffline.length > 0) {
+      if (newlyOnline.length > 0 || newlyOffline.length > 0) {
         let outText = '';
         if (newlyOnline.length > 0) {
           outText += 'New ATC online\n\n';
