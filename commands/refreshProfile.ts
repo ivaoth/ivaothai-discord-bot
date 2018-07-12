@@ -3,7 +3,8 @@ import { resolve } from 'path';
 
 export const handleRefreshProfile = (client: Discord.Client, guild: Discord.Guild) => {
   client.user.setAvatar(resolve(__dirname, '..', 'IVAO_Logo.png'));
+  client.user.setUsername('ivao-bot');
   guild.fetchMember(client.user).then(gm => {
-    gm.setNickname('IVAO Login Bot');
+    gm.setNickname('IVAO Bot');
   });
 };
