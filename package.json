@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/logging": "^1.2.0",
+    "@google-cloud/logging": "^2.0.0",
     "common-tags": "^1.7.2",
     "discord.js": "^11.3.2",
     "erlpack": "^0.1.2",
