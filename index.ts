@@ -12,6 +12,7 @@ import { handleNotLinked } from './commands/notLinked';
 import { handleRefreshUser } from './commands/refreshUser';
 import { handleVerify } from './commands/verify';
 import { handleRefreshAllUsers } from './commands/refreshAllUsers';
+import { handleRefreshAvatar } from './commands/refreshAvatar';
 
 const client = new Discord.Client();
 const Logging = require('@google-cloud/logging');
@@ -84,6 +85,8 @@ client.on('message', message => {
         thailandDivisionRole,
         otherDivisionRole
       );
+    } else if (message.content === '!refreshAvatar') {
+      handleRefreshAvatar(client);
     } else {
       handleElse(message, generalChannel);
     }
