@@ -18,6 +18,7 @@ const client = new Discord.Client();
 const Logging = require('@google-cloud/logging');
 
 const logging = new Logging({
+  projectId: process.env['GOOGLE_CLOUD_PROJECT'],
   credentials: JSON.parse(process.env['GOOGLE_APPS_CREDENTIALS'] as string)
 });
 
