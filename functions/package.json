@@ -13,7 +13,7 @@
   "dependencies": {
     "axios": "0.18.0",
     "camelcase": "5.0.0",
-    "firebase-admin": "5.13.0",
+    "firebase-admin": "5.13.1",
     "firebase-functions": "1.1.0"
   },
   "devDependencies": {
