@@ -14,7 +14,7 @@
     "axios": "0.18.0",
     "camelcase": "5.0.0",
     "firebase-admin": "5.13.1",
-    "firebase-functions": "2.0.0"
+    "firebase-functions": "2.0.1"
   },
   "devDependencies": {
     "@types/camelcase": "4.1.0",
