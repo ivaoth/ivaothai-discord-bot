@@ -28,6 +28,7 @@
     "typescript": "3.0.1"
   },
   "engines": {
-    "node": "10"
+    "node": "10",
+    "npm": "*"
   }
 }
