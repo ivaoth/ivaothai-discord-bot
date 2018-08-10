@@ -13,6 +13,7 @@ import { handleRefreshUser } from './commands/refreshUser';
 import { handleVerify } from './commands/verify';
 import { handleRefreshAllUsers } from './commands/refreshAllUsers';
 import { handleRefreshProfile } from './commands/refreshProfile';
+import { handleMoveVoiceUsersCommand } from './commands/moveVoiceUsers';
 
 const client = new Discord.Client();
 const Logging = require('@google-cloud/logging');
@@ -88,6 +89,8 @@ client.on('message', message => {
       );
     } else if (message.content === '!refreshProfile') {
       handleRefreshProfile(client, guild);
+    } else if (message.content.startsWith('!moveVoiceUsers')) {
+      handleMoveVoiceUsersCommand(message, guild);
     } else {
       handleElse(message, generalChannel);
     }
