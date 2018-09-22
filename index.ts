@@ -14,9 +14,9 @@ import { handleVerify } from './commands/verify';
 import { handleRefreshAllUsers } from './commands/refreshAllUsers';
 import { handleRefreshProfile } from './commands/refreshProfile';
 import { handleMoveVoiceUsersCommand } from './commands/moveVoiceUsers';
+import { Logging } from '@google-cloud/logging';
 
 const client = new Discord.Client();
-const Logging = require('@google-cloud/logging');
 
 const logging = new Logging({
   projectId: process.env['GOOGLE_CLOUD_PROJECT'],
