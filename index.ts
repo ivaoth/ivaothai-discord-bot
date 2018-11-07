@@ -14,7 +14,7 @@ import { handleVerify } from './commands/verify';
 import { handleRefreshAllUsers } from './commands/refreshAllUsers';
 import { handleRefreshProfile } from './commands/refreshProfile';
 import { handleMoveVoiceUsersCommand } from './commands/moveVoiceUsers';
-import { Logging } from '@google-cloud/logging';
+const { Logging } = require('@google-cloud/logging');
 
 const client = new Discord.Client();
 
