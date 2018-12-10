@@ -22,7 +22,7 @@
     "zlib-sync": "0.1.4"
   },
   "devDependencies": {
-    "@types/common-tags": "1.4.0",
+    "@types/common-tags": "1.8.0",
     "@types/node": "10.12.12",
     "@types/table": "4.0.5",
     "typescript": "3.2.2"
