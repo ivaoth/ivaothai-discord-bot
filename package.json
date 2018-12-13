@@ -16,7 +16,7 @@
     "common-tags": "1.8.0",
     "discord.js": "^11.3.2",
     "erlpack": "0.1.2",
-    "firebase-admin": "6.3.0",
+    "firebase-admin": "6.4.0",
     "left-pad": "1.3.0",
     "table": "5.1.1",
     "zlib-sync": "0.1.4"
