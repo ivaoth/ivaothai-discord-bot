@@ -31,6 +31,29 @@ before_script:
   #- git config --global user.email "user@example.com"
   #- git config --global user.name "User name"
 
+  ##
+  ## Assuming you created the SSH_KNOWN_HOSTS variable, uncomment the
+  ## following two lines.
+  ##
+  - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+
+  ##
+  ## Alternatively, use ssh-keyscan to scan the keys of your private server.
+  ## Replace example.com with your private server's domain name. Repeat that
+  ## command if you have more than one server to connect to.
+  ##
+  #- ssh-keyscan example.com >> ~/.ssh/known_hosts
+  #- chmod 644 ~/.ssh/known_hosts
+
+  ##
+  ## You can optionally disable host key checking. Be aware that by adding that
+  ## you are susceptible to man-in-the-middle attacks.
+  ## WARNING: Use this only with the Docker executor, if you use it with shell
+  ## you will overwrite your user's SSH config.
+  ##
+  #- '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
+
 deploy:
   image: ubuntu:latest
   only:
