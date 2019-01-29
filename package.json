@@ -17,6 +17,7 @@
     "discord.js": "^11.3.2",
     "erlpack": "0.1.2",
     "firebase-admin": "6.5.1",
+    "injection-js": "^2.2.1",
     "left-pad": "1.3.0",
     "table": "5.2.2",
     "zlib-sync": "0.1.4"
