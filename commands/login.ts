@@ -1,5 +1,4 @@
 import * as Discord from 'discord.js';
-import * as admin from 'firebase-admin';
 import { stripIndents } from 'common-tags';
 
 export const replyToLoginChat = (
