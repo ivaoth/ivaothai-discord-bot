@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "@types/common-tags": "1.8.0",
-    "@types/node": "10.12.21",
+    "@types/node": "10.12.23",
     "@types/table": "4.0.5",
     "typescript": "3.3.1"
   },
