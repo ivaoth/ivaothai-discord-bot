@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/camelcase": "4.1.0",
     "tslint": "5.12.1",
-    "typescript": "3.3.3"
+    "typescript": "3.3.3333"
   },
   "private": true
 }
