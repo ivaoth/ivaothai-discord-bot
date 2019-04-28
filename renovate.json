@@ -3,7 +3,7 @@
     "config:base"
   ],
   "lockFileMaintenance": {
-    "schedule": "after 5 pm before 10 pm on Friday, Saturday, Sunday",
+    "schedule": "after 5pm before 10pm on Friday, Saturday, Sunday",
     "enabled": true
   }
 }
