@@ -1,8 +1,9 @@
 import * as Discord from 'discord.js';
 import * as admin from 'firebase-admin';
 import { updateGuildMember } from './common/updateGuildMember';
+import axios from 'axios';
 
-export const handleRefreshAllUsers = (
+export const handleRefreshAllUsers = async (
   message: Discord.Message,
   client: Discord.Client,
   guild: Discord.Guild,
@@ -15,46 +16,30 @@ export const handleRefreshAllUsers = (
     .database()
     .ref('admins')
     .child(authorId.toString())
-    .once('value', v => {
+    .once('value', async v => {
       if (v.exists()) {
-        const usersRef = admin.database().ref('users');
-        usersRef.on('child_added', data => {
-          if (data!.exists()) {
-            const userId = data!.key!;
-            client.fetchUser(userId).then(
-              user => {
-                guild.fetchMember(user).then(
-                  member => {
-                    updateGuildMember(
-                      admin
-                        .database()
-                        .ref('users')
-                        .child(data!.key!),
-                      member,
-                      verifiedRole,
-                      thailandDivisionRole,
-                      otherDivisionRole
-                    );
-                  },
-                  err => {
-                    message.author.createDM().then(dm => {
-                      dm.send('This user is not member of this guild.');
-                    });
-                  }
-                );
-              },
-              err => {
-                message.author.createDM().then(dm => {
-                  dm.send(`No user with id ${userId}`);
-                });
-              }
+        const allUsersUrl = new URL('https://sso.th.ivao.aero/allUsers');
+        const allUserIds: string[] = (await axios.get(allUsersUrl.href)).data;
+        for (const uid of allUserIds) {
+          const user = await client.fetchUser(uid);
+          const member = await guild.fetchMember(user);
+          const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
+          getUserDataUrl.searchParams.set('discord_id', uid);
+          const userData = (await axios.get(getUserDataUrl.href)).data;
+          if (userData.success) {
+            updateGuildMember(
+              userData,
+              member,
+              verifiedRole,
+              thailandDivisionRole,
+              otherDivisionRole
             );
           } else {
             message.author.createDM().then(dm => {
               dm.send('No user data found.');
             });
           }
-        });
+        }
       } else {
         message.channel.send(
           'You are not in the list of admins, please do not try this command.'

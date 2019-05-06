@@ -1,21 +1,19 @@
 import * as Discord from 'discord.js';
-import * as admin from 'firebase-admin';
 import { stripIndents } from 'common-tags';
-import { URL } from 'url';
+import axios from 'axios';
 
-export const handleVerify = (
+export const handleVerify = async (
   message: Discord.Message,
   generalChannel: Discord.TextChannel,
   log: any
 ) => {
   const userId = message.author.id;
-  const token = admin
-    .database()
-    .ref('requests')
-    .push(userId).key as string;
-  const base64Token = Buffer.from(token, 'utf8').toString('base64');
-  const callbackLink = new URL('https://sso.ivaothai.com/discord');
-  callbackLink.searchParams.set('token', base64Token);
+  const getKeyUrl = new URL('https://sso.th.ivao.aero/requestDiscordVerification');
+  const result = (await axios.post(getKeyUrl.href, {
+    discord_id: userId
+  })).data;
+  const callbackLink = new URL('https://sso.th.ivao.aero/discord');
+  callbackLink.searchParams.set('key', result.key);
   const loginLink = new URL('https://login.ivao.aero/index.php');
   loginLink.searchParams.set('url', callbackLink.href);
   message.author.createDM().then(dm => {

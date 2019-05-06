@@ -1,6 +1,7 @@
 import * as Discord from 'discord.js';
 import * as admin from 'firebase-admin';
 import { updateGuildMember } from './common/updateGuildMember';
+import axios from 'axios';
 
 export const handleRefreshUser = (
   message: Discord.Message,
@@ -15,46 +16,27 @@ export const handleRefreshUser = (
     .database()
     .ref('admins')
     .child(authorId.toString())
-    .once('value', v => {
+    .once('value', async v => {
       if (v.exists()) {
         const userId = message.content.slice(12).trim();
-        client.fetchUser(userId).then(
-          user => {
-            guild.fetchMember(user).then(
-              member => {
-                const userRef = admin
-                  .database()
-                  .ref('users')
-                  .child(userId);
-                userRef.once('value', data => {
-                  if (data.exists()) {
-                    updateGuildMember(
-                      userRef,
-                      member,
-                      verifiedRole,
-                      thailandDivisionRole,
-                      otherDivisionRole
-                    );
-                  } else {
-                    message.author.createDM().then(dm => {
-                      dm.send('No user data found.');
-                    });
-                  }
-                });
-              },
-              err => {
-                message.author.createDM().then(dm => {
-                  dm.send('This user is not member of this guild.');
-                });
-              }
+        const user = await client.fetchUser(userId);
+        const member = await guild.fetchMember(user);
+        const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
+        getUserDataUrl.searchParams.set('discord_id', userId);
+        const userData = (await axios.get(getUserDataUrl.href)).data;
+          if (userData.success) {
+            updateGuildMember(
+              userData,
+              member,
+              verifiedRole,
+              thailandDivisionRole,
+              otherDivisionRole
             );
-          },
-          err => {
+          } else {
             message.author.createDM().then(dm => {
-              dm.send(`No user with id ${userId}`);
+              dm.send('No user data found.');
             });
           }
-        );
       } else {
         message.channel.send(
           'You are not in the list of admins, please do not try this command.'

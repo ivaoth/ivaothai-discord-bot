@@ -1,5 +1,6 @@
 import * as Discord from 'discord.js';
 import * as admin from 'firebase-admin';
+import axios from 'axios';
 
 import { handleBroadcastCommand } from './commands/broadcast';
 import { notifyNotLinked } from './commands/common/notifyNotLinked';
@@ -97,73 +98,42 @@ client.on('message', message => {
   }
 });
 
-client.on('guildMemberUpdate', (oldMember, newMember) => {
+client.on('guildMemberUpdate', async (oldMember, newMember) => {
   if (oldMember.nickname !== newMember.nickname) {
-    updateGuildMember(
-      admin
-        .database()
-        .ref('users')
-        .child(newMember.id.toString()),
-      newMember,
-      verifiedRole,
-      thailandDivisionRole,
-      otherDivisionRole
-    );
-  }
-});
-
-client.on('guildMemberAdd', newMember => {
-  const userId = newMember.id;
-  const userRef = admin
-    .database()
-    .ref('users')
-    .child(userId);
-  userRef.once('value', data => {
-    if (data.exists()) {
+    const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
+    getUserDataUrl.searchParams.set('discord_id', newMember.user.id);
+    const userData = (await axios.get(getUserDataUrl.href)).data;
+    if (userData.success) {
       updateGuildMember(
-        userRef,
+        userData,
         newMember,
         verifiedRole,
         thailandDivisionRole,
         otherDivisionRole
       );
-    } else {
-      newMember.createDM().then(dm => {
-        notifyNotLinked(dm);
-      });
     }
-  });
+  }
 });
 
-admin
-  .database()
-  .ref('newUsers')
-  .on('child_added', _newUser => {
-    const newUser = _newUser ? _newUser.val() : null;
-    const user = client.fetchUser(newUser);
-    user.then(_user => {
-      if (guild && guild.available) {
-        const _guildMember = guild.fetchMember(_user);
-        _guildMember.then(guildMember => {
-          updateGuildMember(
-            admin
-              .database()
-              .ref('users')
-              .child(newUser),
-            guildMember,
-            verifiedRole,
-            thailandDivisionRole,
-            otherDivisionRole,
-            true
-          ).then(() => {
-            if (_newUser) {
-              _newUser.ref.remove();
-            }
-          });
-        });
-      }
+client.on('guildMemberAdd', async newMember => {
+  const userId = newMember.id;
+  const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
+  getUserDataUrl.searchParams.set('discord_id', newMember.user.id);
+  const userData = (await axios.get(getUserDataUrl.href)).data;
+  if (userData.success) {
+    updateGuildMember(
+      userData,
+      newMember,
+      verifiedRole,
+      thailandDivisionRole,
+      otherDivisionRole
+    );
+  } else {
+    newMember.createDM().then(dm => {
+      notifyNotLinked(dm);
     });
-  });
+  }
+});
 
 client.login(process.env['BOT_TOKEN']);
 
