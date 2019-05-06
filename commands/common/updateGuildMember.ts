@@ -18,7 +18,7 @@ export const updateGuildMember = (
   }
   if (value.staff) {
     const staff: string = value.staff;
-    const validStaff = staff.split(':').filter(s => s.startsWith('TH-'));
+    const validStaff = staff.split(':').filter(s => s.startsWith('TH-') || s.startsWith('VTBB-'));
     if (validStaff.length > 0) {
       prefix = validStaff.join('/');
     } else {
