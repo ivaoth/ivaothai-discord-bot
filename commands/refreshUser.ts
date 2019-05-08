@@ -23,6 +23,7 @@ export const handleRefreshUser = (
         const member = await guild.fetchMember(user);
         const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
         getUserDataUrl.searchParams.set('discord_id', userId);
+        getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
         const userData = (await axios.get(getUserDataUrl.href)).data;
           if (userData.success) {
             updateGuildMember(

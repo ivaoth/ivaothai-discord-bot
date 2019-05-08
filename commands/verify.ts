@@ -10,7 +10,8 @@ export const handleVerify = async (
   const userId = message.author.id;
   const getKeyUrl = new URL('https://sso.th.ivao.aero/requestDiscordVerification');
   const result = (await axios.post(getKeyUrl.href, {
-    discord_id: userId
+    discord_id: userId,
+    apiKey: process.env['API_KEY']!
   })).data;
   const callbackLink = new URL('https://sso.th.ivao.aero/discord');
   callbackLink.searchParams.set('key', result.key);

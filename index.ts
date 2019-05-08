@@ -102,6 +102,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
   if (oldMember.nickname !== newMember.nickname) {
     const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
     getUserDataUrl.searchParams.set('discord_id', newMember.user.id);
+    getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
     const userData = (await axios.get(getUserDataUrl.href)).data;
     if (userData.success) {
       updateGuildMember(
@@ -119,6 +120,7 @@ client.on('guildMemberAdd', async newMember => {
   const userId = newMember.id;
   const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
   getUserDataUrl.searchParams.set('discord_id', newMember.user.id);
+  getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
   const userData = (await axios.get(getUserDataUrl.href)).data;
   if (userData.success) {
     updateGuildMember(

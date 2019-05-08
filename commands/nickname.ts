@@ -9,6 +9,7 @@ export const handleNicknameChange = async (
 ) => {
   const getUserUrl = new URL('https://sso.th.ivao.aero/getUser');
   getUserUrl.searchParams.set('discord_id', message.author.id);
+  getUserUrl.searchParams.set('apiKey', process.env['API_KEY']!);
   const userdata = (await axios.get(getUserUrl.href)).data;
 
 
@@ -19,7 +20,8 @@ export const handleNicknameChange = async (
     const setNicknameUrl = new URL('https://sso.th.ivao.aero/setNickname');
     await axios.patch(setNicknameUrl.href, {
       discord_id: message.author.id,
-      nickname: newNickname
+      nickname: newNickname,
+      apiKey: process.env['API_KEY']!
     });
     const entry = log.entry(
       null,
