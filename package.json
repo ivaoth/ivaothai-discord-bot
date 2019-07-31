@@ -21,7 +21,7 @@
     "firebase-admin": "8.3.0",
     "injection-js": "^2.2.1",
     "left-pad": "1.3.0",
-    "table": "5.4.4",
+    "table": "5.4.5",
     "zlib-sync": "0.1.4"
   },
   "devDependencies": {
