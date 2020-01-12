@@ -28,7 +28,7 @@
     "@types/common-tags": "1.8.0",
     "@types/node": "12.12.22",
     "@types/table": "4.0.7",
-    "ts-node": "8.5.4",
+    "ts-node": "8.6.1",
     "typescript": "3.7.4"
   },
   "engines": {
