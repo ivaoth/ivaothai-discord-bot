@@ -18,7 +18,7 @@
     "common-tags": "1.8.0",
     "discord.js": "^11.3.2",
     "erlpack": "0.1.3",
-    "firebase-admin": "8.9.1",
+    "firebase-admin": "8.9.2",
     "injection-js": "^2.2.1",
     "left-pad": "1.3.0",
     "table": "5.4.6",
