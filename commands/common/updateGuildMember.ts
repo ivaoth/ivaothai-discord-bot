@@ -30,9 +30,11 @@ export const updateGuildMember = (
   let newNickname = `${prefix} ${suffix}`;
   if (value.division !== 'TH') {
     newNickname = newNickname.substr(0, 27) + ` - ${value.division}`;
-    guildMember.addRole(otherDivisionRole);
+    guildMember.roles.add(otherDivisionRole);
+    guildMember.roles.remove(thailandDivisionRole);
   } else {
-    guildMember.addRole(thailandDivisionRole);
+    guildMember.roles.add(thailandDivisionRole);
+    guildMember.roles.remove(otherDivisionRole);
   }
   console.log(newNickname);
   if (newNickname !== guildMember.nickname) {
@@ -46,5 +48,5 @@ export const updateGuildMember = (
       }
     });
   }
-  guildMember.addRole(verifiedRole);
+  guildMember.roles.add(verifiedRole);
 };

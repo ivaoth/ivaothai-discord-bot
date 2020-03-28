@@ -22,8 +22,8 @@ export const handleRefreshAllUsers = async (
         allUsersUrl.searchParams.set('apiKey', process.env['API_KEY']!);
         const allUserIds: string[] = (await axios.get(allUsersUrl.href)).data;
         for (const uid of allUserIds) {
-          const user = await client.fetchUser(uid);
-          const member = await guild.fetchMember(user);
+          const user = await client.users.fetch(uid);
+          const member = await guild.members.fetch(user);
           const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
           getUserDataUrl.searchParams.set('discord_id', uid);
           getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);

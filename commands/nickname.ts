@@ -34,7 +34,7 @@ export const handleNicknameChange = async (
       dm.send('Nickname changed!');
     });
     if (message.channel.id === generalChannel.id) {
-      message.delete(5000);
+      message.delete({timeout: 5000});
     }
   } else {
     message.author.createDM().then(dm => {

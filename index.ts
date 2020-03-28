@@ -7,7 +7,6 @@ import { notifyNotLinked } from './commands/common/notifyNotLinked';
 import { updateGuildMember } from './commands/common/updateGuildMember';
 import { handleElse } from './commands/else';
 import { printHelp } from './commands/help';
-import { replyToLoginChat } from './commands/login';
 import { handleNicknameChange } from './commands/nickname';
 import { handleNotLinked } from './commands/notLinked';
 import { handleRefreshUser } from './commands/refreshUser';
@@ -41,15 +40,15 @@ admin.initializeApp({
 
 client.on('ready', () => {
   console.log('Bot is running');
-  guild = client.guilds.get(process.env['IVAOTHAI_GUILD'] as string)!;
-  verifiedRole = guild.roles.get(process.env['VERIFIED_ROLE'] as string)!;
-  thailandDivisionRole = guild.roles.get(process.env[
+  guild = client.guilds.cache.get(process.env['IVAOTHAI_GUILD'] as string)!;
+  verifiedRole = guild.roles.cache.get(process.env['VERIFIED_ROLE'] as string)!;
+  thailandDivisionRole = guild.roles.cache.get(process.env[
     'THAILAND_DIVISION_ROLE'
   ] as string)!;
-  otherDivisionRole = guild.roles.get(process.env[
+  otherDivisionRole = guild.roles.cache.get(process.env[
     'OTHER_DIVISION_ROLE'
   ] as string)!;
-  generalChannel = guild.channels.get(process.env[
+  generalChannel = guild.channels.cache.get(process.env[
     'GENERAL_CHANNEL'
   ] as string)! as Discord.TextChannel;
   const entry = log.entry(null, 'Bot started');
@@ -57,10 +56,8 @@ client.on('ready', () => {
 });
 
 client.on('message', message => {
-  if (message.author.id !== client.user.id) {
-    if (message.content === '!login') {
-      replyToLoginChat(message, generalChannel, log);
-    } else if (message.content === '!verify') {
+  if (message.author.id !== client.user!.id) {
+    if (message.content === '!verify') {
       handleVerify(message, generalChannel, log);
     } else if (message.content.startsWith('!broadcast')) {
       handleBroadcastCommand(message, generalChannel);
@@ -101,13 +98,13 @@ client.on('message', message => {
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
   if (oldMember.nickname !== newMember.nickname) {
     const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
-    getUserDataUrl.searchParams.set('discord_id', newMember.user.id);
+    getUserDataUrl.searchParams.set('discord_id', newMember.user!.id);
     getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
     const userData = (await axios.get(getUserDataUrl.href)).data;
     if (userData.success) {
       updateGuildMember(
         userData,
-        newMember,
+        newMember as Discord.GuildMember,
         verifiedRole,
         thailandDivisionRole,
         otherDivisionRole
@@ -119,13 +116,13 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
 client.on('guildMemberAdd', async newMember => {
   const userId = newMember.id;
   const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
-  getUserDataUrl.searchParams.set('discord_id', newMember.user.id);
+  getUserDataUrl.searchParams.set('discord_id', newMember.user!.id);
   getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
   const userData = (await axios.get(getUserDataUrl.href)).data;
   if (userData.success) {
     updateGuildMember(
       userData,
-      newMember,
+      newMember as Discord.GuildMember,
       verifiedRole,
       thailandDivisionRole,
       otherDivisionRole

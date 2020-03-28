@@ -19,8 +19,8 @@ export const handleRefreshUser = (
     .once('value', async v => {
       if (v.exists()) {
         const userId = message.content.slice(12).trim();
-        const user = await client.fetchUser(userId);
-        const member = await guild.fetchMember(user);
+        const user = await client.users.fetch(userId);
+        const member = await guild.members.fetch(user);
         const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
         getUserDataUrl.searchParams.set('discord_id', userId);
         getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);

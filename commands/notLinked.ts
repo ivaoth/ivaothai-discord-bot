@@ -10,8 +10,8 @@ export const handleNotLinked = (message: Discord.Message, guild: Discord.Guild, 
     .child(authorId.toString())
     .once('value', v => {
       if (v.exists()) {
-        guild.members.forEach(member => {
-          if (!member.roles.exists('id', verifiedRole.id)) {
+        guild.members.cache.forEach(member => {
+          if (!member.roles.cache.some(r => r.id === verifiedRole.id)) {
             member.createDM().then(dm => {
               notifyNotLinked(dm);
             });

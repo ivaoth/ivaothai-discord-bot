@@ -13,17 +13,17 @@ export const handleMoveVoiceUsersCommand = (
     .once('value', v => {
       if (v.exists()) {
         const [, fromChannelId, toChannelId] = message.content.split(' ');
-        const fromChannel = guild.channels.get(
+        const fromChannel = guild.channels.cache.get(
           fromChannelId
         ) as Discord.VoiceChannel;
-        const toChannel = guild.channels.get(
+        const toChannel = guild.channels.cache.get(
           toChannelId
         ) as Discord.VoiceChannel;
         if (!(fromChannel && toChannel)) {
           message.channel.send('No such channels exists');
         } else {
           fromChannel.members.forEach(m => {
-            m.setVoiceChannel(toChannel);
+            m.voice.setChannel(toChannel);
             message.channel.send(`Moved ${m.id}`);
           });
         }

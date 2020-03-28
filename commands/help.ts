@@ -19,9 +19,9 @@ export const printHelp = (
     \`!nickname <NewNickname>\`: Change your nickname in Discord`
     )
     .then(sentMessage => {
-      message.delete(5000);
+      message.delete({timeout: 5000, reason: 'Timed out!'});
       if (message.channel.id === generalChannel.id) {
-        (sentMessage as Discord.Message).delete(15000);
+        (sentMessage as Discord.Message).delete({timeout: 15000, reason: 'Timed out!'});
       }
     });
 

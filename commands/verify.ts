@@ -27,7 +27,7 @@ export const handleVerify = async (
   });
 
   if (message.channel.id === generalChannel.id) {
-    message.delete(5000);
+    message.delete({timeout: 5000});
   }
   const entry = log.entry(
     null,
