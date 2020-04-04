@@ -26,12 +26,12 @@ export const handleRefreshAllUsers = async (
         const allUserIds: string[] = (await axios.get(allUsersUrl.href)).data;
         for (const uid of allUserIds) {
           const user = await client.users.fetch(uid);
-          const member = await guild.members.fetch(user);
-          const getUserDataUrl = new URL("https://sso.th.ivao.aero/getUser");
-          getUserDataUrl.searchParams.set("discord_id", uid);
-          getUserDataUrl.searchParams.set("apiKey", process.env["API_KEY"]!);
-          const userData = (await axios.get(getUserDataUrl.href)).data;
-          if (member) {
+          try {
+            const member = await guild.members.fetch(user);
+            const getUserDataUrl = new URL("https://sso.th.ivao.aero/getUser");
+            getUserDataUrl.searchParams.set("discord_id", uid);
+            getUserDataUrl.searchParams.set("apiKey", process.env["API_KEY"]!);
+            const userData = (await axios.get(getUserDataUrl.href)).data;
             if (userData.success) {
               updateGuildMember(
                 userData,
@@ -48,7 +48,7 @@ export const handleRefreshAllUsers = async (
                 dm.send("No user data found.");
               });
             }
-          } else {
+          } catch (e) {
             message.author.createDM().then(dm => {
               dm.send(`${uid} no longer a member.`);
             });
