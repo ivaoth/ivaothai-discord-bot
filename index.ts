@@ -14,6 +14,7 @@ import { handleVerify } from './commands/verify';
 import { handleRefreshAllUsers } from './commands/refreshAllUsers';
 import { handleRefreshProfile } from './commands/refreshProfile';
 import { handleMoveVoiceUsersCommand } from './commands/moveVoiceUsers';
+import { handleDeleteMessageAfter } from './commands/deleteMessageAfter';
 const { Logging } = require('@google-cloud/logging');
 
 const client = new Discord.Client();
@@ -107,6 +108,8 @@ client.on('message', message => {
       handleRefreshProfile(client, guild);
     } else if (message.content.startsWith('!moveVoiceUsers')) {
       handleMoveVoiceUsersCommand(message, guild);
+    } else if (message.content.startsWith('!queryChannelMessage')) {
+      handleDeleteMessageAfter(message, guild);
     } else {
       handleElse(message, generalChannel);
     }
