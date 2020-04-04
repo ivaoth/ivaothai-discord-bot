@@ -13,7 +13,7 @@ export const handleDeleteMessageAfter = async (message: Discord.Message, guild: 
         const channel = guild.channels.cache.get(
           channelId,
         ) as Discord.TextChannel;
-        const messages = await channel.messages.fetch({after: messageId, limit: 1000});
+        const messages = await channel.messages.fetch({after: messageId, limit: 100});
         for (const m of messages) {
           channel.messages.delete(m[1]);
         }
