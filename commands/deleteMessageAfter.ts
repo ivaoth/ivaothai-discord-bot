@@ -14,9 +14,9 @@ export const handleDeleteMessageAfter = async (message: Discord.Message, guild: 
           channelId,
         ) as Discord.TextChannel;
         const messages = await channel.messages.fetch({after: messageId, limit: 100});
-        for (const m of messages) {
-          channel.messages.delete(m[1]);
-        }
+        messages.forEach(m => {
+          m.delete();
+        });
       } else {
         message.channel.send(
           'You are not in the list of admins, please do not try this command.'
