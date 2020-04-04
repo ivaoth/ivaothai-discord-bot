@@ -108,7 +108,7 @@ client.on('message', message => {
       handleRefreshProfile(client, guild);
     } else if (message.content.startsWith('!moveVoiceUsers')) {
       handleMoveVoiceUsersCommand(message, guild);
-    } else if (message.content.startsWith('!queryChannelMessage')) {
+    } else if (message.content.startsWith('!deleteChannelMessage')) {
       handleDeleteMessageAfter(message, guild);
     } else {
       handleElse(message, generalChannel);
