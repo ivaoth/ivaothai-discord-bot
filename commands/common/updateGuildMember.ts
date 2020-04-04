@@ -26,11 +26,10 @@ export const updateGuildMember = (
       s => s.startsWith("TH-") || s.startsWith("VTBB-")
     );
     const validOtherDivisionStaff = positions.filter(
-      s => !(s.startsWith("TH-") && s.startsWith("VTBB-")) && s.includes("-")
+      s => !(s.startsWith("TH-") || s.startsWith("VTBB-")) && s.includes("-")
     );
     const validHQStaff = positions.filter(s => !s.includes("-"));
     if (validTHStaff.length > 0) {
-      prefix = validTHStaff.join("/");
       guildMember.roles.add(thailandDivisionStaffRole);
     } else {
       prefix = value.vid;
@@ -46,6 +45,7 @@ export const updateGuildMember = (
     } else {
       guildMember.roles.remove(hqStaffRole);
     }
+    prefix = positions.join('/');
   } else {
     prefix = value.vid;
     guildMember.roles.remove(thailandDivisionStaffRole);
