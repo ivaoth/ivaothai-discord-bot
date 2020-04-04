@@ -29,6 +29,9 @@ let guild: Discord.Guild;
 let verifiedRole: Discord.Role;
 let thailandDivisionRole: Discord.Role;
 let otherDivisionRole: Discord.Role;
+let thailandDivisionStaffRole: Discord.Role;
+let otherDivisionStaffRole: Discord.Role;
+let hqStaffRole: Discord.Role;
 let generalChannel: Discord.TextChannel;
 
 const privkey = JSON.parse(process.env['FIREBASE_CREDENTIALS'] as string);
@@ -47,6 +50,15 @@ client.on('ready', () => {
   ] as string)!;
   otherDivisionRole = guild.roles.cache.get(process.env[
     'OTHER_DIVISION_ROLE'
+  ] as string)!;
+  thailandDivisionStaffRole = guild.roles.cache.get(process.env[
+    'THAILAND_DIVISION_STAFF_ROLE'
+  ] as string)!;
+  otherDivisionStaffRole = guild.roles.cache.get(process.env[
+    'OTHER_DIVISION_STAFF_ROLE'
+  ] as string)!;
+  hqStaffRole = guild.roles.cache.get(process.env[
+    'HQ_STAFF_ROLE'
   ] as string)!;
   generalChannel = guild.channels.cache.get(process.env[
     'GENERAL_CHANNEL'
@@ -72,7 +84,10 @@ client.on('message', message => {
         guild,
         verifiedRole,
         thailandDivisionRole,
-        otherDivisionRole
+        otherDivisionRole,
+        thailandDivisionStaffRole,
+        otherDivisionStaffRole,
+        hqStaffRole
       );
     } else if (message.content === '!notifyNotLinked') {
       handleNotLinked(message, guild, verifiedRole);
@@ -83,7 +98,10 @@ client.on('message', message => {
         guild,
         verifiedRole,
         thailandDivisionRole,
-        otherDivisionRole
+        otherDivisionRole,
+        thailandDivisionStaffRole,
+        otherDivisionStaffRole,
+        hqStaffRole
       );
     } else if (message.content === '!refreshProfile') {
       handleRefreshProfile(client, guild);
@@ -107,7 +125,10 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         newMember as Discord.GuildMember,
         verifiedRole,
         thailandDivisionRole,
-        otherDivisionRole
+        otherDivisionRole,
+        thailandDivisionRole,
+        otherDivisionStaffRole,
+        hqStaffRole
       );
     }
   }
@@ -125,7 +146,10 @@ client.on('guildMemberAdd', async newMember => {
       newMember as Discord.GuildMember,
       verifiedRole,
       thailandDivisionRole,
-      otherDivisionRole
+      otherDivisionRole,
+      thailandDivisionStaffRole,
+      otherDivisionStaffRole,
+      hqStaffRole
     );
   } else {
     newMember.createDM().then(dm => {

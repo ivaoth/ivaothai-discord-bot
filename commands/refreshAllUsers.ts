@@ -9,7 +9,10 @@ export const handleRefreshAllUsers = async (
   guild: Discord.Guild,
   verifiedRole: Discord.Role,
   thailandDivisionRole: Discord.Role,
-  otherDivisionRole: Discord.Role
+  otherDivisionRole: Discord.Role,
+  thailandDivisionStaffRole: Discord.Role,
+  otherDivisionStaffRole: Discord.Role,
+  hqDivisionStaffRole: Discord.Role
 ) => {
   const authorId = message.author.id;
   admin
@@ -34,7 +37,10 @@ export const handleRefreshAllUsers = async (
               member,
               verifiedRole,
               thailandDivisionRole,
-              otherDivisionRole
+              otherDivisionRole,
+              thailandDivisionStaffRole,
+              otherDivisionStaffRole,
+              hqDivisionStaffRole
             );
           } else {
             message.author.createDM().then(dm => {

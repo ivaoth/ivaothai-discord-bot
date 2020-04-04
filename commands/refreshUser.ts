@@ -9,7 +9,10 @@ export const handleRefreshUser = (
   guild: Discord.Guild,
   verifiedRole: Discord.Role,
   thailandDivisionRole: Discord.Role,
-  otherDivisionRole: Discord.Role
+  otherDivisionRole: Discord.Role,
+  thailandDivisionStaffRole: Discord.Role,
+  otherDivisionStaffRole: Discord.Role,
+  hqStaffRole: Discord.Role
 ) => {
   const authorId = message.author.id;
   admin
@@ -31,7 +34,10 @@ export const handleRefreshUser = (
               member,
               verifiedRole,
               thailandDivisionRole,
-              otherDivisionRole
+              otherDivisionRole,
+              thailandDivisionStaffRole,
+              otherDivisionStaffRole,
+              hqStaffRole
             );
           } else {
             message.author.createDM().then(dm => {

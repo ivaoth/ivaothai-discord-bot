@@ -1,4 +1,4 @@
-import * as Discord from 'discord.js';
+import * as Discord from "discord.js";
 
 export const updateGuildMember = (
   userData: any,
@@ -6,6 +6,9 @@ export const updateGuildMember = (
   verifiedRole: Discord.Role,
   thailandDivisionRole: Discord.Role,
   otherDivisionRole: Discord.Role,
+  thailandDivisionStaffRole: Discord.Role,
+  otherDivisionStaffRole: Discord.Role,
+  hqStaffRole: Discord.Role,
   notifyServerOwner: boolean = false
 ) => {
   const value = userData;
@@ -18,17 +21,39 @@ export const updateGuildMember = (
   }
   if (value.staff) {
     const staff: string = value.staff;
-    const validStaff = staff.split(':').filter(s => s.startsWith('TH-') || s.startsWith('VTBB-'));
-    if (validStaff.length > 0) {
-      prefix = validStaff.join('/');
+    const positions = staff.split(":");
+    const validTHStaff = positions.filter(
+      s => s.startsWith("TH-") || s.startsWith("VTBB-")
+    );
+    const validOtherDivisionStaff = positions.filter(
+      s => !(s.startsWith("TH-") && s.startsWith("VTBB-")) && s.includes("-")
+    );
+    const validHQStaff = positions.filter(s => !s.includes("-"));
+    if (validTHStaff.length > 0) {
+      prefix = validTHStaff.join("/");
+      guildMember.roles.add(thailandDivisionStaffRole);
     } else {
       prefix = value.vid;
+      guildMember.roles.remove(thailandDivisionStaffRole);
+    }
+    if (validOtherDivisionStaff.length > 0) {
+      guildMember.roles.add(otherDivisionStaffRole);
+    } else {
+      guildMember.roles.remove(otherDivisionStaffRole);
+    }
+    if (validHQStaff.length > 0) {
+      guildMember.roles.add(hqStaffRole);
+    } else {
+      guildMember.roles.remove(hqStaffRole);
     }
   } else {
     prefix = value.vid;
+    guildMember.roles.remove(thailandDivisionStaffRole);
+    guildMember.roles.remove(otherDivisionStaffRole);
+    guildMember.roles.remove(hqStaffRole);
   }
   let newNickname = `${prefix} ${suffix}`;
-  if (value.division !== 'TH') {
+  if (value.division !== "TH") {
     newNickname = newNickname.substr(0, 27) + ` - ${value.division}`;
     guildMember.roles.add(otherDivisionRole);
     guildMember.roles.remove(thailandDivisionRole);
