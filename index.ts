@@ -14,7 +14,6 @@ import { handleVerify } from './commands/verify';
 import { handleRefreshAllUsers } from './commands/refreshAllUsers';
 import { handleRefreshProfile } from './commands/refreshProfile';
 import { handleMoveVoiceUsersCommand } from './commands/moveVoiceUsers';
-import { handleDeleteMessageAfter } from './commands/deleteMessageAfter';
 import { Logging } from '@google-cloud/logging';
 
 const client = new Discord.Client();
@@ -33,7 +32,9 @@ let otherDivisionRole: Discord.Role;
 let thailandDivisionStaffRole: Discord.Role;
 let otherDivisionStaffRole: Discord.Role;
 let hqStaffRole: Discord.Role;
-let generalChannel: Discord.TextChannel;
+let unverifiedRole: Discord.Role;
+let ivaoBotChannel: Discord.TextChannel;
+let announcementChannel: Discord.TextChannel;
 
 const privkey = JSON.parse(process.env['FIREBASE_CREDENTIALS'] as string);
 
@@ -59,8 +60,14 @@ client.on('ready', () => {
     process.env['OTHER_DIVISION_STAFF_ROLE'] as string
   )!;
   hqStaffRole = guild.roles.cache.get(process.env['HQ_STAFF_ROLE'] as string)!;
-  generalChannel = guild.channels.cache.get(
-    process.env['GENERAL_CHANNEL'] as string
+  unverifiedRole = guild.roles.cache.get(
+    process.env['UNVERIFIED_ROLE'] as string
+  )!;
+  ivaoBotChannel = guild.channels.cache.get(
+    process.env['IVAO_BOT_CHANNEL'] as string
+  )! as Discord.TextChannel;
+  announcementChannel = guild.channels.cache.get(
+    process.env['ANNOUNCEMENT_CHANNEL'] as string
   )! as Discord.TextChannel;
   const entry = log.entry(undefined, 'Bot started');
   log.write(entry);
@@ -69,13 +76,13 @@ client.on('ready', () => {
 client.on('message', (message) => {
   if (message.author.id !== client.user!.id) {
     if (message.content === '!verify') {
-      handleVerify(message, generalChannel, log);
+      handleVerify(message, ivaoBotChannel, log);
     } else if (message.content.startsWith('!broadcast')) {
-      handleBroadcastCommand(message, generalChannel);
+      handleBroadcastCommand(message, announcementChannel);
     } else if (message.content === '!help') {
-      printHelp(message, generalChannel, log);
+      printHelp(message, ivaoBotChannel, log);
     } else if (message.content.startsWith('!nickname')) {
-      handleNicknameChange(message, generalChannel, log);
+      handleNicknameChange(message, ivaoBotChannel, log);
     } else if (message.content.startsWith('!refreshUser')) {
       handleRefreshUser(
         message,
@@ -86,7 +93,8 @@ client.on('message', (message) => {
         otherDivisionRole,
         thailandDivisionStaffRole,
         otherDivisionStaffRole,
-        hqStaffRole
+        hqStaffRole,
+        unverifiedRole
       );
     } else if (message.content === '!notifyNotLinked') {
       handleNotLinked(message, guild, verifiedRole);
@@ -100,16 +108,15 @@ client.on('message', (message) => {
         otherDivisionRole,
         thailandDivisionStaffRole,
         otherDivisionStaffRole,
-        hqStaffRole
+        hqStaffRole,
+        unverifiedRole
       );
     } else if (message.content === '!refreshProfile') {
       handleRefreshProfile(client, guild);
     } else if (message.content.startsWith('!moveVoiceUsers')) {
       handleMoveVoiceUsersCommand(message, guild);
-    } else if (message.content.startsWith('!deleteChannelMessage')) {
-      handleDeleteMessageAfter(message, guild);
     } else {
-      handleElse(message, generalChannel);
+      handleElse(message, ivaoBotChannel);
     }
   }
 });

@@ -12,7 +12,8 @@ export const handleRefreshAllUsers = async (
   otherDivisionRole: Discord.Role,
   thailandDivisionStaffRole: Discord.Role,
   otherDivisionStaffRole: Discord.Role,
-  hqDivisionStaffRole: Discord.Role
+  hqDivisionStaffRole: Discord.Role,
+  unverifiedRole: Discord.Role
 ): Promise<void> => {
   const authorId = message.author.id;
   admin
@@ -33,6 +34,7 @@ export const handleRefreshAllUsers = async (
             getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
             const userData = (await axios.get(getUserDataUrl.href)).data;
             if (userData.success) {
+              member.roles.remove(unverifiedRole);
               updateGuildMember(
                 userData,
                 member,
@@ -47,6 +49,7 @@ export const handleRefreshAllUsers = async (
               message.author.createDM().then((dm) => {
                 dm.send('No user data found.');
               });
+              member.roles.add(unverifiedRole);
             }
           } catch (e) {
             message.author.createDM().then((dm) => {
