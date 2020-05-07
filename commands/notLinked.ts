@@ -1,30 +1,24 @@
 import * as Discord from 'discord.js';
-import * as admin from 'firebase-admin';
+import { isAdmin } from '../utils/checkAdmin';
 import { notifyNotLinked } from './common/notifyNotLinked';
 
-export const handleNotLinked = (
+export const handleNotLinked = async (
   message: Discord.Message,
   guild: Discord.Guild,
   verifiedRole: Discord.Role
-): void => {
+): Promise<void> => {
   const authorId = message.author.id;
-  admin
-    .database()
-    .ref('admins')
-    .child(authorId.toString())
-    .once('value', (v) => {
-      if (v.exists()) {
-        guild.members.cache.forEach((member) => {
-          if (!member.roles.cache.some((r) => r.id === verifiedRole.id)) {
-            member.createDM().then((dm) => {
-              notifyNotLinked(dm);
-            });
-          }
+  if (await isAdmin(authorId)) {
+    guild.members.cache.forEach((member) => {
+      if (!member.roles.cache.some((r) => r.id === verifiedRole.id)) {
+        member.createDM().then((dm) => {
+          notifyNotLinked(dm);
         });
-      } else {
-        message.channel.send(
-          'You are not in the list of admins, please do not try this command.'
-        );
       }
     });
+  } else {
+    message.channel.send(
+      'You are not in the list of admins, please do not try this command.'
+    );
+  }
 };

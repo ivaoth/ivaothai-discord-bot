@@ -1,5 +1,4 @@
 import * as Discord from 'discord.js';
-import * as admin from 'firebase-admin';
 import axios from 'axios';
 
 import { handleBroadcastCommand } from './commands/broadcast';
@@ -35,13 +34,6 @@ let hqStaffRole: Discord.Role;
 let unverifiedRole: Discord.Role;
 let ivaoBotChannel: Discord.TextChannel;
 let announcementChannel: Discord.TextChannel;
-
-const privkey = JSON.parse(process.env['FIREBASE_CREDENTIALS'] as string);
-
-admin.initializeApp({
-  credential: admin.credential.cert(privkey),
-  databaseURL: 'https://ivao-thailand-sso.firebaseio.com'
-});
 
 client.on('ready', () => {
   console.log('Bot is running');
