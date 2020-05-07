@@ -22,41 +22,32 @@ export const handleRefreshAllUsers = async (
     .child(authorId.toString())
     .once('value', async (v) => {
       if (v.exists()) {
-        const allUsersUrl = new URL('https://sso.th.ivao.aero/allUsers');
-        allUsersUrl.searchParams.set('apiKey', process.env['API_KEY']!);
-        const allUserIds: string[] = (await axios.get(allUsersUrl.href)).data;
-        for (const uid of allUserIds) {
-          const user = await client.users.fetch(uid);
-          try {
-            const member = await guild.members.fetch(user);
-            const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
-            getUserDataUrl.searchParams.set('discord_id', uid);
-            getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
-            const userData = (await axios.get(getUserDataUrl.href)).data;
-            if (userData.success) {
-              member.roles.remove(unverifiedRole);
-              updateGuildMember(
-                userData,
-                member,
-                verifiedRole,
-                thailandDivisionRole,
-                otherDivisionRole,
-                thailandDivisionStaffRole,
-                otherDivisionStaffRole,
-                hqDivisionStaffRole
-              );
-            } else {
-              message.author.createDM().then((dm) => {
-                dm.send('No user data found.');
-              });
-              member.roles.add(unverifiedRole);
-            }
-          } catch (e) {
+        guild.members.cache.forEach(async (member) => {
+          const user = member.user;
+          const uid = user.id;
+          const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
+          getUserDataUrl.searchParams.set('discord_id', uid);
+          getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
+          const userData = (await axios.get(getUserDataUrl.href)).data;
+          if (userData.success) {
+            member.roles.remove(unverifiedRole);
+            updateGuildMember(
+              userData,
+              member,
+              verifiedRole,
+              thailandDivisionRole,
+              otherDivisionRole,
+              thailandDivisionStaffRole,
+              otherDivisionStaffRole,
+              hqDivisionStaffRole
+            );
+          } else {
             message.author.createDM().then((dm) => {
-              dm.send(`${uid} no longer a member.`);
+              dm.send('No user data found.');
             });
+            member.roles.add(unverifiedRole);
           }
-        }
+        });
       } else {
         message.channel.send(
           'You are not in the list of admins, please do not try this command.'
