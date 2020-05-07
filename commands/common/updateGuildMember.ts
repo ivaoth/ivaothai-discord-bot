@@ -1,7 +1,14 @@
-import * as Discord from "discord.js";
+import * as Discord from 'discord.js';
 
 export const updateGuildMember = (
-  userData: any,
+  userData: {
+    customNickname: string;
+    firstname: string;
+    lastname: string;
+    staff: string;
+    vid: string;
+    division: string;
+  },
   guildMember: Discord.GuildMember,
   verifiedRole: Discord.Role,
   thailandDivisionRole: Discord.Role,
@@ -9,8 +16,8 @@ export const updateGuildMember = (
   thailandDivisionStaffRole: Discord.Role,
   otherDivisionStaffRole: Discord.Role,
   hqStaffRole: Discord.Role,
-  notifyServerOwner: boolean = false
-) => {
+  notifyServerOwner = false
+): void => {
   const value = userData;
   let suffix: string;
   let prefix: string;
@@ -21,14 +28,14 @@ export const updateGuildMember = (
   }
   if (value.staff) {
     const staff: string = value.staff;
-    const positions = staff.split(":");
+    const positions = staff.split(':');
     const validTHStaff = positions.filter(
-      s => s.startsWith("TH-") || s.startsWith("VTBB-")
+      (s) => s.startsWith('TH-') || s.startsWith('VTBB-')
     );
     const validOtherDivisionStaff = positions.filter(
-      s => !(s.startsWith("TH-") || s.startsWith("VTBB-")) && s.includes("-")
+      (s) => !(s.startsWith('TH-') || s.startsWith('VTBB-')) && s.includes('-')
     );
-    const validHQStaff = positions.filter(s => !s.includes("-"));
+    const validHQStaff = positions.filter((s) => !s.includes('-'));
     if (validTHStaff.length > 0) {
       guildMember.roles.add(thailandDivisionStaffRole);
     } else {
@@ -53,7 +60,7 @@ export const updateGuildMember = (
     guildMember.roles.remove(hqStaffRole);
   }
   let newNickname = `${prefix} ${suffix}`;
-  if (value.division !== "TH") {
+  if (value.division !== 'TH') {
     newNickname = newNickname.substr(0, 27) + ` - ${value.division}`;
     guildMember.roles.add(otherDivisionRole);
     guildMember.roles.remove(thailandDivisionRole);
@@ -65,7 +72,7 @@ export const updateGuildMember = (
   if (newNickname !== guildMember.nickname) {
     guildMember.setNickname(newNickname.substr(0, 32)).catch(() => {
       if (notifyServerOwner) {
-        guildMember.createDM().then(dm => {
+        guildMember.createDM().then((dm) => {
           dm.send(
             "Well, I may be at the highest, but I can't compete with the server owner."
           );

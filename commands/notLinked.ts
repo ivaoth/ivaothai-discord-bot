@@ -2,17 +2,21 @@ import * as Discord from 'discord.js';
 import * as admin from 'firebase-admin';
 import { notifyNotLinked } from './common/notifyNotLinked';
 
-export const handleNotLinked = (message: Discord.Message, guild: Discord.Guild, verifiedRole: Discord.Role) => {
+export const handleNotLinked = (
+  message: Discord.Message,
+  guild: Discord.Guild,
+  verifiedRole: Discord.Role
+): void => {
   const authorId = message.author.id;
   admin
     .database()
     .ref('admins')
     .child(authorId.toString())
-    .once('value', v => {
+    .once('value', (v) => {
       if (v.exists()) {
-        guild.members.cache.forEach(member => {
-          if (!member.roles.cache.some(r => r.id === verifiedRole.id)) {
-            member.createDM().then(dm => {
+        guild.members.cache.forEach((member) => {
+          if (!member.roles.cache.some((r) => r.id === verifiedRole.id)) {
+            member.createDM().then((dm) => {
               notifyNotLinked(dm);
             });
           }

@@ -13,13 +13,13 @@ export const handleRefreshUser = (
   thailandDivisionStaffRole: Discord.Role,
   otherDivisionStaffRole: Discord.Role,
   hqStaffRole: Discord.Role
-) => {
+): void => {
   const authorId = message.author.id;
   admin
     .database()
     .ref('admins')
     .child(authorId.toString())
-    .once('value', async v => {
+    .once('value', async (v) => {
       if (v.exists()) {
         const userId = message.content.slice(12).trim();
         const user = await client.users.fetch(userId);
@@ -28,22 +28,22 @@ export const handleRefreshUser = (
         getUserDataUrl.searchParams.set('discord_id', userId);
         getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
         const userData = (await axios.get(getUserDataUrl.href)).data;
-          if (userData.success) {
-            updateGuildMember(
-              userData,
-              member,
-              verifiedRole,
-              thailandDivisionRole,
-              otherDivisionRole,
-              thailandDivisionStaffRole,
-              otherDivisionStaffRole,
-              hqStaffRole
-            );
-          } else {
-            message.author.createDM().then(dm => {
-              dm.send('No user data found.');
-            });
-          }
+        if (userData.success) {
+          updateGuildMember(
+            userData,
+            member,
+            verifiedRole,
+            thailandDivisionRole,
+            otherDivisionRole,
+            thailandDivisionStaffRole,
+            otherDivisionStaffRole,
+            hqStaffRole
+          );
+        } else {
+          message.author.createDM().then((dm) => {
+            dm.send('No user data found.');
+          });
+        }
       } else {
         message.channel.send(
           'You are not in the list of admins, please do not try this command.'

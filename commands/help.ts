@@ -1,11 +1,12 @@
 import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
+import { Log } from '@google-cloud/logging';
 
 export const printHelp = (
   message: Discord.Message,
   generalChannel: Discord.TextChannel,
-  log: any
-) => {
+  log: Log
+): void => {
   message.channel
     .send(
       stripIndents`
@@ -18,18 +19,19 @@ export const printHelp = (
     \`!verify\`: Connect your VID to Discord
     \`!nickname <NewNickname>\`: Change your nickname in Discord`
     )
-    .then(sentMessage => {
-      message.delete({timeout: 5000, reason: 'Timed out!'});
+    .then((sentMessage) => {
+      message.delete({ timeout: 5000, reason: 'Timed out!' });
       if (message.channel.id === generalChannel.id) {
-        (sentMessage as Discord.Message).delete({timeout: 15000, reason: 'Timed out!'});
+        (sentMessage as Discord.Message).delete({
+          timeout: 15000,
+          reason: 'Timed out!'
+        });
       }
     });
 
   const entry = log.entry(
-    null,
-    `[help] received message from ${message.author.username}#${
-      message.author.discriminator
-    } (${message.author.id})`
+    undefined,
+    `[help] received message from ${message.author.username}#${message.author.discriminator} (${message.author.id})`
   );
   log.write(entry);
 };

@@ -1,7 +1,7 @@
 import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
 
-export const notifyNotLinked = (dm: Discord.DMChannel) => {
+export const notifyNotLinked = (dm: Discord.DMChannel): void => {
   dm.send(stripIndents`
               สวัสดี ฉันเป็นบอทของ IVAO Thailand Division
               ดูเหมือนว่าคุณจะยังไม่ได้เชื่อมต่อ IVAO Account ของคุณกับ Discord แห่งนี้

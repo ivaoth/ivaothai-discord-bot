@@ -1,20 +1,26 @@
 import * as Discord from 'discord.js';
 import * as admin from 'firebase-admin';
 
-export const handleDeleteMessageAfter = async (message: Discord.Message, guild: Discord.Guild) => {
+export const handleDeleteMessageAfter = async (
+  message: Discord.Message,
+  guild: Discord.Guild
+): Promise<void> => {
   const authorId = message.author.id;
   admin
     .database()
     .ref('admins')
     .child(authorId.toString())
-    .once('value', async v => {
+    .once('value', async (v) => {
       if (v.exists()) {
         const [, channelId, messageId] = message.content.split(' ');
         const channel = guild.channels.cache.get(
-          channelId,
+          channelId
         ) as Discord.TextChannel;
-        const messages = await channel.messages.fetch({after: messageId, limit: 100});
-        messages.forEach(m => {
+        const messages = await channel.messages.fetch({
+          after: messageId,
+          limit: 100
+        });
+        messages.forEach((m) => {
           m.delete();
         });
       } else {
@@ -23,4 +29,4 @@ export const handleDeleteMessageAfter = async (message: Discord.Message, guild: 
         );
       }
     });
-}
+};

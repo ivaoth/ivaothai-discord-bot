@@ -13,29 +13,16 @@ export const discord = functions.https.onRequest(async (request, response) => {
   } else {
     const ivaoApi = `https://login.ivao.aero/api.php?type=json&token=${ivaoToken}`;
     const userData = (await axios.get(ivaoApi)).data;
-    const requestRef = admin
-      .database()
-      .ref('requests')
-      .child(token);
+    const requestRef = admin.database().ref('requests').child(token);
     const _discordId: number = (await requestRef.once('value')).val();
     if (_discordId) {
       const discordId = _discordId.toString();
       await Promise.all([
-        admin
-          .database()
-          .ref('users')
-          .child(discordId.toString())
-          .set(userData),
+        admin.database().ref('users').child(discordId.toString()).set(userData),
         requestRef.remove()
       ]);
-      await admin
-        .database()
-        .ref('newUsers')
-        .push(discordId.toString());
+      await admin.database().ref('newUsers').push(discordId.toString());
     }
-    response
-      .status(200)
-      .send('เข้าสู่ระบบสำเร็จ\nLog In Successfully')
-      .end();
+    response.status(200).send('เข้าสู่ระบบสำเร็จ\nLog In Successfully').end();
   }
 });

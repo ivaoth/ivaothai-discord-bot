@@ -4,13 +4,13 @@ import * as admin from 'firebase-admin';
 export const handleMoveVoiceUsersCommand = (
   message: Discord.Message,
   guild: Discord.Guild
-) => {
+): void => {
   const authorId = message.author.id;
   admin
     .database()
     .ref('admins')
     .child(authorId.toString())
-    .once('value', v => {
+    .once('value', (v) => {
       if (v.exists()) {
         const [, fromChannelId, toChannelId] = message.content.split(' ');
         const fromChannel = guild.channels.cache.get(
@@ -22,7 +22,7 @@ export const handleMoveVoiceUsersCommand = (
         if (!(fromChannel && toChannel)) {
           message.channel.send('No such channels exists');
         } else {
-          fromChannel.members.forEach(m => {
+          fromChannel.members.forEach((m) => {
             m.voice.setChannel(toChannel);
             message.channel.send(`Moved ${m.id}`);
           });

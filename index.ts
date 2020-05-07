@@ -15,7 +15,7 @@ import { handleRefreshAllUsers } from './commands/refreshAllUsers';
 import { handleRefreshProfile } from './commands/refreshProfile';
 import { handleMoveVoiceUsersCommand } from './commands/moveVoiceUsers';
 import { handleDeleteMessageAfter } from './commands/deleteMessageAfter';
-const { Logging } = require('@google-cloud/logging');
+import { Logging } from '@google-cloud/logging';
 
 const client = new Discord.Client();
 
@@ -46,29 +46,27 @@ client.on('ready', () => {
   console.log('Bot is running');
   guild = client.guilds.cache.get(process.env['IVAOTHAI_GUILD'] as string)!;
   verifiedRole = guild.roles.cache.get(process.env['VERIFIED_ROLE'] as string)!;
-  thailandDivisionRole = guild.roles.cache.get(process.env[
-    'THAILAND_DIVISION_ROLE'
-  ] as string)!;
-  otherDivisionRole = guild.roles.cache.get(process.env[
-    'OTHER_DIVISION_ROLE'
-  ] as string)!;
-  thailandDivisionStaffRole = guild.roles.cache.get(process.env[
-    'THAILAND_DIVISION_STAFF_ROLE'
-  ] as string)!;
-  otherDivisionStaffRole = guild.roles.cache.get(process.env[
-    'OTHER_DIVISION_STAFF_ROLE'
-  ] as string)!;
-  hqStaffRole = guild.roles.cache.get(process.env[
-    'HQ_STAFF_ROLE'
-  ] as string)!;
-  generalChannel = guild.channels.cache.get(process.env[
-    'GENERAL_CHANNEL'
-  ] as string)! as Discord.TextChannel;
-  const entry = log.entry(null, 'Bot started');
+  thailandDivisionRole = guild.roles.cache.get(
+    process.env['THAILAND_DIVISION_ROLE'] as string
+  )!;
+  otherDivisionRole = guild.roles.cache.get(
+    process.env['OTHER_DIVISION_ROLE'] as string
+  )!;
+  thailandDivisionStaffRole = guild.roles.cache.get(
+    process.env['THAILAND_DIVISION_STAFF_ROLE'] as string
+  )!;
+  otherDivisionStaffRole = guild.roles.cache.get(
+    process.env['OTHER_DIVISION_STAFF_ROLE'] as string
+  )!;
+  hqStaffRole = guild.roles.cache.get(process.env['HQ_STAFF_ROLE'] as string)!;
+  generalChannel = guild.channels.cache.get(
+    process.env['GENERAL_CHANNEL'] as string
+  )! as Discord.TextChannel;
+  const entry = log.entry(undefined, 'Bot started');
   log.write(entry);
 });
 
-client.on('message', message => {
+client.on('message', (message) => {
   if (message.author.id !== client.user!.id) {
     if (message.content === '!verify') {
       handleVerify(message, generalChannel, log);
@@ -137,8 +135,7 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
   }
 });
 
-client.on('guildMemberAdd', async newMember => {
-  const userId = newMember.id;
+client.on('guildMemberAdd', async (newMember) => {
   const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
   getUserDataUrl.searchParams.set('discord_id', newMember.user!.id);
   getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
@@ -155,7 +152,7 @@ client.on('guildMemberAdd', async newMember => {
       hqStaffRole
     );
   } else {
-    newMember.createDM().then(dm => {
+    newMember.createDM().then((dm) => {
       notifyNotLinked(dm);
     });
   }
