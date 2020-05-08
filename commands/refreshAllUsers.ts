@@ -17,29 +17,34 @@ export const handleRefreshAllUsers = async (
 ): Promise<void> => {
   const authorId = message.author.id;
   if (await isAdmin(authorId)) {
-    guild.members.cache.forEach(async (member) => {
-      const user = member.user;
-      const uid = user.id;
-      const userData = await getUserData(uid);
-      if (userData.status === 'success') {
-        await updateGuildMember(
-          userData.data,
-          member,
-          verifiedRole,
-          thailandDivisionRole,
-          otherDivisionRole,
-          thailandDivisionStaffRole,
-          otherDivisionStaffRole,
-          hqDivisionStaffRole,
-          unverifiedRole,
-          botRole
-        );
-      } else {
-        await message.channel.send(
-          `Data fetch failed for ${user.username}#${user.discriminator} (${uid})`
-        );
-      }
-    });
+    await Promise.all(
+      guild.members.cache.map(async (member) => {
+        return (async (): Promise<void> => {
+          const user = member.user;
+          const uid = user.id;
+          const userData = await getUserData(uid);
+          if (userData.status === 'success') {
+            await updateGuildMember(
+              userData.data,
+              member,
+              verifiedRole,
+              thailandDivisionRole,
+              otherDivisionRole,
+              thailandDivisionStaffRole,
+              otherDivisionStaffRole,
+              hqDivisionStaffRole,
+              unverifiedRole,
+              botRole
+            );
+          } else {
+            await message.channel.send(
+              `Data fetch failed for ${user.username}#${user.discriminator} (${uid})`
+            );
+          }
+        })();
+      })
+    );
+    await message.channel.send('All users updated');
   } else {
     await message.channel.send(
       'You are not in the list of admins, please do not try this command.'
