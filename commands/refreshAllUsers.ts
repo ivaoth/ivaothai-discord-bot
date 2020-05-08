@@ -16,6 +16,8 @@ export const handleRefreshAllUsers = async (
 ): Promise<void> => {
   const authorId = message.author.id;
   if (await isAdmin(authorId)) {
+    let count = 0;
+    const total = guild.members.cache.size;
     for (const [, member] of guild.members.cache) {
       const user = member.user;
       const uid = user.id;
@@ -30,6 +32,10 @@ export const handleRefreshAllUsers = async (
         otherDivisionStaffRole,
         hqDivisionStaffRole,
         unverifiedRole
+      );
+      count += 1;
+      await message.channel.send(
+        `[${count}/${total}] Updated ${user.username}#${user.discriminator}`
       );
     }
   } else {
