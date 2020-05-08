@@ -98,7 +98,9 @@ export const updateGuildMember = async (
     await guildMember.roles.remove(hqStaffRole);
     await guildMember.roles.add(unverifiedRole);
     const nickname = `[UNVERIFIED] ${guildMember.user.username}`.substr(0, 32);
-    await guildMember.setNickname(nickname);
+    if (nickname !== guildMember.nickname) {
+      await guildMember.setNickname(nickname);
+    }
     await guildMember.createDM().then((dm) => {
       return notifyNotLinked(dm);
     });
