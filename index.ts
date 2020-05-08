@@ -108,39 +108,43 @@ client.on('ready', () => {
   client.on('guildMemberUpdate', async (oldMember, newMember) => {
     if (oldMember.nickname !== newMember.nickname) {
       const userData = await getUserData(newMember.user!.id);
-      await updateGuildMember(
-        userData,
-        newMember as Discord.GuildMember,
-        verifiedRole,
-        thailandDivisionRole,
-        otherDivisionRole,
-        thailandDivisionRole,
-        otherDivisionStaffRole,
-        hqStaffRole,
-        unverifiedRole,
-        botRole
-      );
+      if (userData.status === 'success') {
+        await updateGuildMember(
+          userData.data,
+          newMember as Discord.GuildMember,
+          verifiedRole,
+          thailandDivisionRole,
+          otherDivisionRole,
+          thailandDivisionRole,
+          otherDivisionStaffRole,
+          hqStaffRole,
+          unverifiedRole,
+          botRole
+        );
+      }
     }
   });
 
   client.on('guildMemberAdd', async (newMember) => {
     const userData = await getUserData(newMember.user!.id);
-    await updateGuildMember(
-      userData,
-      newMember as Discord.GuildMember,
-      verifiedRole,
-      thailandDivisionRole,
-      otherDivisionRole,
-      thailandDivisionStaffRole,
-      otherDivisionStaffRole,
-      hqStaffRole,
-      unverifiedRole,
-      botRole
-    );
-    if (userData.success) {
-      await newMember.createDM().then((dm) => {
-        return notifyNotLinked(dm);
-      });
+    if (userData.status === 'success') {
+      await updateGuildMember(
+        userData.data,
+        newMember as Discord.GuildMember,
+        verifiedRole,
+        thailandDivisionRole,
+        otherDivisionRole,
+        thailandDivisionStaffRole,
+        otherDivisionStaffRole,
+        hqStaffRole,
+        unverifiedRole,
+        botRole
+      );
+      if (userData.data.success) {
+        await newMember.createDM().then((dm) => {
+          return notifyNotLinked(dm);
+        });
+      }
     }
   });
 });

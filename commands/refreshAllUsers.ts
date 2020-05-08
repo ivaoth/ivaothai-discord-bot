@@ -23,22 +23,28 @@ export const handleRefreshAllUsers = async (
       const user = member.user;
       const uid = user.id;
       const userData = await getUserData(uid);
-      await updateGuildMember(
-        userData,
-        member,
-        verifiedRole,
-        thailandDivisionRole,
-        otherDivisionRole,
-        thailandDivisionStaffRole,
-        otherDivisionStaffRole,
-        hqDivisionStaffRole,
-        unverifiedRole,
-        botRole
-      );
-      count += 1;
-      await message.channel.send(
-        `[${count}/${total}] Updated ${user.username}#${user.discriminator}`
-      );
+      if (userData.status === 'success') {
+        await updateGuildMember(
+          userData.data,
+          member,
+          verifiedRole,
+          thailandDivisionRole,
+          otherDivisionRole,
+          thailandDivisionStaffRole,
+          otherDivisionStaffRole,
+          hqDivisionStaffRole,
+          unverifiedRole,
+          botRole
+        );
+        count += 1;
+        await message.channel.send(
+          `[${count}/${total}] Updated ${user.username}#${user.discriminator} (${user.id})`
+        );
+      } else {
+        await message.channel.send(
+          `[${count}/${total}] Failed to fetch data for ${user.username}#${user.discriminator} (${user.id})`
+        );
+      }
     }
   } else {
     await message.channel.send(

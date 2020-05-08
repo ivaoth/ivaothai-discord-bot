@@ -22,18 +22,22 @@ export const handleRefreshUser = async (
     const user = await client.users.fetch(userId);
     const member = await guild.members.fetch(user);
     const userData = await getUserData(userId);
-    await updateGuildMember(
-      userData,
-      member,
-      verifiedRole,
-      thailandDivisionRole,
-      otherDivisionRole,
-      thailandDivisionStaffRole,
-      otherDivisionStaffRole,
-      hqStaffRole,
-      unverifiedRole,
-      botRole
-    );
+    if (userData.status === 'success') {
+      await updateGuildMember(
+        userData.data,
+        member,
+        verifiedRole,
+        thailandDivisionRole,
+        otherDivisionRole,
+        thailandDivisionStaffRole,
+        otherDivisionStaffRole,
+        hqStaffRole,
+        unverifiedRole,
+        botRole
+      );
+    } else {
+      await message.channel.send('API Error');
+    }
   } else {
     await message.channel.send(
       'You are not in the list of admins, please do not try this command.'
