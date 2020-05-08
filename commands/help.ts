@@ -2,14 +2,12 @@ import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
 import { Log } from '@google-cloud/logging';
 
-export const printHelp = (
+export const printHelp = async (
   message: Discord.Message,
-  generalChannel: Discord.TextChannel,
   log: Log
-): void => {
-  message.channel
-    .send(
-      stripIndents`
+): Promise<void> => {
+  await message.channel.send(
+    stripIndents`
     คำสั่งที่สามารถใช้ได้
     \`!verify\`: เชื่อมต่อ VID ของคุณกับ Discord
     \`!nickname <NewNickname>\`: เปลี่ยนชื่อเรียกของคุณใน Discord
@@ -18,20 +16,11 @@ export const printHelp = (
     Available commands
     \`!verify\`: Connect your VID to Discord
     \`!nickname <NewNickname>\`: Change your nickname in Discord`
-    )
-    .then((sentMessage) => {
-      message.delete({ timeout: 5000, reason: 'Timed out!' });
-      if (message.channel.id === generalChannel.id) {
-        (sentMessage as Discord.Message).delete({
-          timeout: 15000,
-          reason: 'Timed out!'
-        });
-      }
-    });
+  );
 
   const entry = log.entry(
     undefined,
     `[help] received message from ${message.author.username}#${message.author.discriminator} (${message.author.id})`
   );
-  log.write(entry);
+  await log.write(entry);
 };

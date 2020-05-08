@@ -1,11 +1,10 @@
 import * as Discord from 'discord.js';
 import { isAdmin } from '../utils/checkAdmin';
 import { updateGuildMember } from './common/updateGuildMember';
-import axios from 'axios';
+import { getUserData } from '../utils/getUserData';
 
 export const handleRefreshAllUsers = async (
   message: Discord.Message,
-  client: Discord.Client,
   guild: Discord.Guild,
   verifiedRole: Discord.Role,
   thailandDivisionRole: Discord.Role,
@@ -17,34 +16,24 @@ export const handleRefreshAllUsers = async (
 ): Promise<void> => {
   const authorId = message.author.id;
   if (await isAdmin(authorId)) {
-    guild.members.cache.forEach(async (member) => {
+    for (const [, member] of guild.members.cache) {
       const user = member.user;
       const uid = user.id;
-      const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
-      getUserDataUrl.searchParams.set('discord_id', uid);
-      getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
-      const userData = (await axios.get(getUserDataUrl.href)).data;
-      if (userData.success) {
-        member.roles.remove(unverifiedRole);
-        updateGuildMember(
-          userData,
-          member,
-          verifiedRole,
-          thailandDivisionRole,
-          otherDivisionRole,
-          thailandDivisionStaffRole,
-          otherDivisionStaffRole,
-          hqDivisionStaffRole
-        );
-      } else {
-        message.author.createDM().then((dm) => {
-          dm.send('No user data found.');
-        });
-        member.roles.add(unverifiedRole);
-      }
-    });
+      const userData = await getUserData(uid);
+      await updateGuildMember(
+        userData,
+        member,
+        verifiedRole,
+        thailandDivisionRole,
+        otherDivisionRole,
+        thailandDivisionStaffRole,
+        otherDivisionStaffRole,
+        hqDivisionStaffRole,
+        unverifiedRole
+      );
+    }
   } else {
-    message.channel.send(
+    await message.channel.send(
       'You are not in the list of admins, please do not try this command.'
     );
   }

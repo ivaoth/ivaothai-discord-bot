@@ -9,15 +9,15 @@ export const handleNotLinked = async (
 ): Promise<void> => {
   const authorId = message.author.id;
   if (await isAdmin(authorId)) {
-    guild.members.cache.forEach((member) => {
+    for (const [, member] of guild.members.cache) {
       if (!member.roles.cache.some((r) => r.id === verifiedRole.id)) {
-        member.createDM().then((dm) => {
+        await member.createDM().then((dm) => {
           notifyNotLinked(dm);
         });
       }
-    });
+    }
   } else {
-    message.channel.send(
+    await message.channel.send(
       'You are not in the list of admins, please do not try this command.'
     );
   }

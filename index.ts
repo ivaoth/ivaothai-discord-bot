@@ -1,6 +1,4 @@
 import * as Discord from 'discord.js';
-import axios from 'axios';
-
 import { handleBroadcastCommand } from './commands/broadcast';
 import { notifyNotLinked } from './commands/common/notifyNotLinked';
 import { updateGuildMember } from './commands/common/updateGuildMember';
@@ -14,6 +12,7 @@ import { handleRefreshAllUsers } from './commands/refreshAllUsers';
 import { handleRefreshProfile } from './commands/refreshProfile';
 import { handleMoveVoiceUsersCommand } from './commands/moveVoiceUsers';
 import { Logging } from '@google-cloud/logging';
+import { getUserData } from './utils/getUserData';
 
 const client = new Discord.Client();
 
@@ -24,103 +23,89 @@ const logging = new Logging({
 
 const log = logging.log('ivao-th-bot');
 
-let guild: Discord.Guild;
-let verifiedRole: Discord.Role;
-let thailandDivisionRole: Discord.Role;
-let otherDivisionRole: Discord.Role;
-let thailandDivisionStaffRole: Discord.Role;
-let otherDivisionStaffRole: Discord.Role;
-let hqStaffRole: Discord.Role;
-let unverifiedRole: Discord.Role;
-let ivaoBotChannel: Discord.TextChannel;
-let announcementChannel: Discord.TextChannel;
-
 client.on('ready', () => {
   console.log('Bot is running');
-  guild = client.guilds.cache.get(process.env['IVAOTHAI_GUILD'] as string)!;
-  verifiedRole = guild.roles.cache.get(process.env['VERIFIED_ROLE'] as string)!;
-  thailandDivisionRole = guild.roles.cache.get(
+  const guild = client.guilds.cache.get(
+    process.env['IVAOTHAI_GUILD'] as string
+  )!;
+  const verifiedRole = guild.roles.cache.get(
+    process.env['VERIFIED_ROLE'] as string
+  )!;
+  const thailandDivisionRole = guild.roles.cache.get(
     process.env['THAILAND_DIVISION_ROLE'] as string
   )!;
-  otherDivisionRole = guild.roles.cache.get(
+  const otherDivisionRole = guild.roles.cache.get(
     process.env['OTHER_DIVISION_ROLE'] as string
   )!;
-  thailandDivisionStaffRole = guild.roles.cache.get(
+  const thailandDivisionStaffRole = guild.roles.cache.get(
     process.env['THAILAND_DIVISION_STAFF_ROLE'] as string
   )!;
-  otherDivisionStaffRole = guild.roles.cache.get(
+  const otherDivisionStaffRole = guild.roles.cache.get(
     process.env['OTHER_DIVISION_STAFF_ROLE'] as string
   )!;
-  hqStaffRole = guild.roles.cache.get(process.env['HQ_STAFF_ROLE'] as string)!;
-  unverifiedRole = guild.roles.cache.get(
+  const hqStaffRole = guild.roles.cache.get(
+    process.env['HQ_STAFF_ROLE'] as string
+  )!;
+  const unverifiedRole = guild.roles.cache.get(
     process.env['UNVERIFIED_ROLE'] as string
   )!;
-  ivaoBotChannel = guild.channels.cache.get(
-    process.env['IVAO_BOT_CHANNEL'] as string
-  )! as Discord.TextChannel;
-  announcementChannel = guild.channels.cache.get(
+  const announcementChannel = guild.channels.cache.get(
     process.env['ANNOUNCEMENT_CHANNEL'] as string
   )! as Discord.TextChannel;
   const entry = log.entry(undefined, 'Bot started');
   log.write(entry);
-});
 
-client.on('message', (message) => {
-  if (message.author.id !== client.user!.id) {
-    if (message.content === '!verify') {
-      handleVerify(message, ivaoBotChannel, log);
-    } else if (message.content.startsWith('!broadcast')) {
-      handleBroadcastCommand(message, announcementChannel);
-    } else if (message.content === '!help') {
-      printHelp(message, ivaoBotChannel, log);
-    } else if (message.content.startsWith('!nickname')) {
-      handleNicknameChange(message, ivaoBotChannel, log);
-    } else if (message.content.startsWith('!refreshUser')) {
-      handleRefreshUser(
-        message,
-        client,
-        guild,
-        verifiedRole,
-        thailandDivisionRole,
-        otherDivisionRole,
-        thailandDivisionStaffRole,
-        otherDivisionStaffRole,
-        hqStaffRole,
-        unverifiedRole
-      );
-    } else if (message.content === '!notifyNotLinked') {
-      handleNotLinked(message, guild, verifiedRole);
-    } else if (message.content === '!refreshAllUsers') {
-      handleRefreshAllUsers(
-        message,
-        client,
-        guild,
-        verifiedRole,
-        thailandDivisionRole,
-        otherDivisionRole,
-        thailandDivisionStaffRole,
-        otherDivisionStaffRole,
-        hqStaffRole,
-        unverifiedRole
-      );
-    } else if (message.content === '!refreshProfile') {
-      handleRefreshProfile(client, guild);
-    } else if (message.content.startsWith('!moveVoiceUsers')) {
-      handleMoveVoiceUsersCommand(message, guild);
-    } else {
-      handleElse(message, ivaoBotChannel);
+  client.on('message', async (message) => {
+    if (message.author.id !== client.user!.id) {
+      if (message.content === '!verify') {
+        await handleVerify(message, log);
+      } else if (message.content.startsWith('!broadcast')) {
+        await handleBroadcastCommand(message, announcementChannel);
+      } else if (message.content === '!help') {
+        await printHelp(message, log);
+      } else if (message.content.startsWith('!nickname')) {
+        await handleNicknameChange(message, log);
+      } else if (message.content.startsWith('!refreshUser')) {
+        await handleRefreshUser(
+          message,
+          client,
+          guild,
+          verifiedRole,
+          thailandDivisionRole,
+          otherDivisionRole,
+          thailandDivisionStaffRole,
+          otherDivisionStaffRole,
+          hqStaffRole,
+          unverifiedRole
+        );
+      } else if (message.content === '!notifyNotLinked') {
+        await handleNotLinked(message, guild, verifiedRole);
+      } else if (message.content === '!refreshAllUsers') {
+        await handleRefreshAllUsers(
+          message,
+          guild,
+          verifiedRole,
+          thailandDivisionRole,
+          otherDivisionRole,
+          thailandDivisionStaffRole,
+          otherDivisionStaffRole,
+          hqStaffRole,
+          unverifiedRole
+        );
+      } else if (message.content === '!refreshProfile') {
+        await handleRefreshProfile(client, guild);
+      } else if (message.content.startsWith('!moveVoiceUsers')) {
+        await handleMoveVoiceUsersCommand(message, guild);
+      } else {
+        await handleElse(message);
+      }
     }
-  }
-});
+  });
 
-client.on('guildMemberUpdate', async (oldMember, newMember) => {
-  if (oldMember.nickname !== newMember.nickname) {
-    const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
-    getUserDataUrl.searchParams.set('discord_id', newMember.user!.id);
-    getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
-    const userData = (await axios.get(getUserDataUrl.href)).data;
-    if (userData.success) {
-      updateGuildMember(
+  client.on('guildMemberUpdate', async (oldMember, newMember) => {
+    if (oldMember.nickname !== newMember.nickname) {
+      const userData = await getUserData(newMember.user!.id);
+      await updateGuildMember(
         userData,
         newMember as Discord.GuildMember,
         verifiedRole,
@@ -128,19 +113,15 @@ client.on('guildMemberUpdate', async (oldMember, newMember) => {
         otherDivisionRole,
         thailandDivisionRole,
         otherDivisionStaffRole,
-        hqStaffRole
+        hqStaffRole,
+        unverifiedRole
       );
     }
-  }
-});
+  });
 
-client.on('guildMemberAdd', async (newMember) => {
-  const getUserDataUrl = new URL('https://sso.th.ivao.aero/getUser');
-  getUserDataUrl.searchParams.set('discord_id', newMember.user!.id);
-  getUserDataUrl.searchParams.set('apiKey', process.env['API_KEY']!);
-  const userData = (await axios.get(getUserDataUrl.href)).data;
-  if (userData.success) {
-    updateGuildMember(
+  client.on('guildMemberAdd', async (newMember) => {
+    const userData = await getUserData(newMember.user!.id);
+    await updateGuildMember(
       userData,
       newMember as Discord.GuildMember,
       verifiedRole,
@@ -148,13 +129,15 @@ client.on('guildMemberAdd', async (newMember) => {
       otherDivisionRole,
       thailandDivisionStaffRole,
       otherDivisionStaffRole,
-      hqStaffRole
+      hqStaffRole,
+      unverifiedRole
     );
-  } else {
-    newMember.createDM().then((dm) => {
-      notifyNotLinked(dm);
-    });
-  }
+    if (userData.success) {
+      await newMember.createDM().then((dm) => {
+        return notifyNotLinked(dm);
+      });
+    }
+  });
 });
 
 client.login(process.env['BOT_TOKEN']);

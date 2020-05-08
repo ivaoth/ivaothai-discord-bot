@@ -17,13 +17,15 @@ export const handleMoveVoiceUsersCommand = async (
     if (!(fromChannel && toChannel)) {
       message.channel.send('No such channels exists');
     } else {
-      fromChannel.members.forEach((m) => {
-        m.voice.setChannel(toChannel);
-        message.channel.send(`Moved ${m.id}`);
-      });
+      for (const [, m] of fromChannel.members) {
+        await m.voice.setChannel(toChannel);
+        await message.channel.send(
+          `Moved ${m.user.username}#${m.user.discriminator}`
+        );
+      }
     }
   } else {
-    message.channel.send(
+    await message.channel.send(
       'You are not in the list of admins, please do not try this command.'
     );
   }
