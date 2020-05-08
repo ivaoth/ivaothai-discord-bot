@@ -151,6 +151,10 @@ client.on('ready', () => {
 
 client.login(process.env['BOT_TOKEN']);
 
+process.on('unhandledRejection', (error) => {
+  console.error('Unhandled promise rejection:', error);
+});
+
 process.on('SIGINT', () => {
   console.log('Terminating');
   process.exit();
