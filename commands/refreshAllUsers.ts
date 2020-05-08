@@ -17,13 +17,13 @@ export const handleRefreshAllUsers = async (
 ): Promise<void> => {
   const authorId = message.author.id;
   if (await isAdmin(authorId)) {
-    let count = 0;
-    const total = guild.members.cache.size;
-    for (const [, member] of guild.members.cache) {
+    guild.members.cache.forEach(async (member) => {
       const user = member.user;
       const uid = user.id;
       const userData = await getUserData(uid);
+      console.log(`[${uid}]: fetch data complete`);
       if (userData.status === 'success') {
+        console.log(`[${uid}] Data fetch succeeded`);
         await updateGuildMember(
           userData.data,
           member,
@@ -36,16 +36,11 @@ export const handleRefreshAllUsers = async (
           unverifiedRole,
           botRole
         );
-        count += 1;
-        await message.channel.send(
-          `[${count}/${total}] Updated ${user.username}#${user.discriminator} (${user.id})`
-        );
+        console.log(`[${uid}] Update Completed`);
       } else {
-        await message.channel.send(
-          `[${count}/${total}] Failed to fetch data for ${user.username}#${user.discriminator} (${user.id})`
-        );
+        console.log(`[${uid}] Data fetch failed`);
       }
-    }
+    });
   } else {
     await message.channel.send(
       'You are not in the list of admins, please do not try this command.'

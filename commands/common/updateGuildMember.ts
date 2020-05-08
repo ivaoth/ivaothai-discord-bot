@@ -49,21 +49,25 @@ export const updateGuildMember = async (
         prefix = userData.vid;
         await guildMember.roles.remove(thailandDivisionStaffRole);
       }
+      console.log(`[${guildMember.user.id}] TH Staff Role Completed`);
       if (validOtherDivisionStaff.length > 0) {
         await guildMember.roles.add(otherDivisionStaffRole);
       } else {
         await guildMember.roles.remove(otherDivisionStaffRole);
       }
+      console.log(`[${guildMember.user.id}] Other Staff Role Completed`);
       if (validHQStaff.length > 0) {
         await guildMember.roles.add(hqStaffRole);
       } else {
         await guildMember.roles.remove(hqStaffRole);
       }
+      console.log(`[${guildMember.user.id}] HQ Staff Role Completed`);
     } else {
       prefix = userData.vid;
       await guildMember.roles.remove(thailandDivisionStaffRole);
       await guildMember.roles.remove(otherDivisionStaffRole);
       await guildMember.roles.remove(hqStaffRole);
+      console.log(`[${guildMember.user.id}] All Staff Roles Completed`);
     }
     let newNickname = `${prefix} ${suffix}`;
     if (userData.division !== 'TH') {
@@ -74,6 +78,7 @@ export const updateGuildMember = async (
       await guildMember.roles.add(thailandDivisionRole);
       await guildMember.roles.remove(otherDivisionRole);
     }
+    console.log(`[${guildMember.user.id}] Division Role Completed`);
     if (newNickname !== guildMember.nickname) {
       try {
         await guildMember.setNickname(newNickname.substr(0, 32));
@@ -98,6 +103,7 @@ export const updateGuildMember = async (
       await guildMember.roles.remove(otherDivisionStaffRole);
       await guildMember.roles.remove(hqStaffRole);
       await guildMember.roles.add(unverifiedRole);
+      console.log(`[${guildMember.user.id}] Unverified Role Completed`);
       const nickname = `[UNVERIFIED] ${guildMember.user.username}`.substr(
         0,
         32
