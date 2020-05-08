@@ -1,5 +1,4 @@
 import * as Discord from 'discord.js';
-import { notifyNotLinked } from './notifyNotLinked';
 
 export const updateGuildMember = async (
   userData:
@@ -101,9 +100,6 @@ export const updateGuildMember = async (
     if (nickname !== guildMember.nickname) {
       await guildMember.setNickname(nickname);
     }
-    await guildMember.createDM().then((dm) => {
-      return notifyNotLinked(dm);
-    });
   }
   console.log(
     `Updated ${guildMember.user.username}#${guildMember.user.discriminator}`
