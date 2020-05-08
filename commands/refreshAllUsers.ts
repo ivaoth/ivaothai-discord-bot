@@ -12,7 +12,8 @@ export const handleRefreshAllUsers = async (
   thailandDivisionStaffRole: Discord.Role,
   otherDivisionStaffRole: Discord.Role,
   hqDivisionStaffRole: Discord.Role,
-  unverifiedRole: Discord.Role
+  unverifiedRole: Discord.Role,
+  botRole: Discord.Role
 ): Promise<void> => {
   const authorId = message.author.id;
   if (await isAdmin(authorId)) {
@@ -31,7 +32,8 @@ export const handleRefreshAllUsers = async (
         thailandDivisionStaffRole,
         otherDivisionStaffRole,
         hqDivisionStaffRole,
-        unverifiedRole
+        unverifiedRole,
+        botRole
       );
       count += 1;
       await message.channel.send(

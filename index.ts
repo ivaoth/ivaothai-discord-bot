@@ -49,6 +49,7 @@ client.on('ready', () => {
   const unverifiedRole = guild.roles.cache.get(
     process.env['UNVERIFIED_ROLE'] as string
   )!;
+  const botRole = guild.roles.cache.get(process.env['BOT_ROLE'] as string)!;
   const announcementChannel = guild.channels.cache.get(
     process.env['ANNOUNCEMENT_CHANNEL'] as string
   )! as Discord.TextChannel;
@@ -76,7 +77,8 @@ client.on('ready', () => {
           thailandDivisionStaffRole,
           otherDivisionStaffRole,
           hqStaffRole,
-          unverifiedRole
+          unverifiedRole,
+          botRole
         );
       } else if (message.content === '!notifyNotLinked') {
         await handleNotLinked(message, guild, verifiedRole);
@@ -90,7 +92,8 @@ client.on('ready', () => {
           thailandDivisionStaffRole,
           otherDivisionStaffRole,
           hqStaffRole,
-          unverifiedRole
+          unverifiedRole,
+          botRole
         );
       } else if (message.content === '!refreshProfile') {
         await handleRefreshProfile(client, guild);
@@ -114,7 +117,8 @@ client.on('ready', () => {
         thailandDivisionRole,
         otherDivisionStaffRole,
         hqStaffRole,
-        unverifiedRole
+        unverifiedRole,
+        botRole
       );
     }
   });
@@ -130,7 +134,8 @@ client.on('ready', () => {
       thailandDivisionStaffRole,
       otherDivisionStaffRole,
       hqStaffRole,
-      unverifiedRole
+      unverifiedRole,
+      botRole
     );
     if (userData.success) {
       await newMember.createDM().then((dm) => {

@@ -20,6 +20,7 @@ export const updateGuildMember = async (
   otherDivisionStaffRole: Discord.Role,
   hqStaffRole: Discord.Role,
   unverifiedRole: Discord.Role,
+  botRole: Discord.Role,
   notifyServerOwner = false
 ): Promise<void> => {
   let suffix: string;
@@ -89,16 +90,21 @@ export const updateGuildMember = async (
     await guildMember.roles.remove(unverifiedRole);
     await guildMember.roles.add(verifiedRole);
   } else {
-    await guildMember.roles.remove(verifiedRole);
-    await guildMember.roles.remove(thailandDivisionRole);
-    await guildMember.roles.remove(otherDivisionRole);
-    await guildMember.roles.remove(thailandDivisionStaffRole);
-    await guildMember.roles.remove(otherDivisionStaffRole);
-    await guildMember.roles.remove(hqStaffRole);
-    await guildMember.roles.add(unverifiedRole);
-    const nickname = `[UNVERIFIED] ${guildMember.user.username}`.substr(0, 32);
-    if (nickname !== guildMember.nickname) {
-      await guildMember.setNickname(nickname);
+    if (!guildMember.roles.cache.some((r) => r.id === botRole.id)) {
+      await guildMember.roles.remove(verifiedRole);
+      await guildMember.roles.remove(thailandDivisionRole);
+      await guildMember.roles.remove(otherDivisionRole);
+      await guildMember.roles.remove(thailandDivisionStaffRole);
+      await guildMember.roles.remove(otherDivisionStaffRole);
+      await guildMember.roles.remove(hqStaffRole);
+      await guildMember.roles.add(unverifiedRole);
+      const nickname = `[UNVERIFIED] ${guildMember.user.username}`.substr(
+        0,
+        32
+      );
+      if (nickname !== guildMember.nickname) {
+        await guildMember.setNickname(nickname);
+      }
     }
   }
   console.log(
