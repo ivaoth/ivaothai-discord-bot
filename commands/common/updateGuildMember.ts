@@ -42,6 +42,7 @@ export const updateGuildMember = async (
       );
       const validHQStaff = positions.filter((s) => !s.includes('-'));
       if (validTHStaff.length > 0) {
+        prefix = validTHStaff.join('/');
         await guildMember.roles.add(thailandDivisionStaffRole);
       } else {
         prefix = userData.vid;
@@ -57,7 +58,6 @@ export const updateGuildMember = async (
       } else {
         await guildMember.roles.remove(hqStaffRole);
       }
-      prefix = validTHStaff.join('/');
     } else {
       prefix = userData.vid;
       await guildMember.roles.remove(thailandDivisionStaffRole);
