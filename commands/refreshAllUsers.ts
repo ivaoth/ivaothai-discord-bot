@@ -21,9 +21,7 @@ export const handleRefreshAllUsers = async (
       const user = member.user;
       const uid = user.id;
       const userData = await getUserData(uid);
-      console.log(`[${uid}]: fetch data complete`);
       if (userData.status === 'success') {
-        console.log(`[${uid}] Data fetch succeeded`);
         await updateGuildMember(
           userData.data,
           member,
@@ -36,9 +34,10 @@ export const handleRefreshAllUsers = async (
           unverifiedRole,
           botRole
         );
-        console.log(`[${uid}] Update Completed`);
       } else {
-        console.log(`[${uid}] Data fetch failed`);
+        await message.channel.send(
+          `Data fetch failed for ${user.username}#${user.discriminator} (${uid})`
+        );
       }
     });
   } else {

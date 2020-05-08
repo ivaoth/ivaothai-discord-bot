@@ -44,41 +44,54 @@ export const updateGuildMember = async (
       const validHQStaff = positions.filter((s) => !s.includes('-'));
       if (validTHStaff.length > 0) {
         prefix = validTHStaff.join('/');
-        await guildMember.roles.add(thailandDivisionStaffRole);
+        guildMember.roles.cache.some(
+          (r) => r.id === thailandDivisionStaffRole.id
+        ) || (await guildMember.roles.add(thailandDivisionStaffRole));
       } else {
         prefix = userData.vid;
-        await guildMember.roles.remove(thailandDivisionStaffRole);
+        guildMember.roles.cache.some(
+          (r) => r.id === thailandDivisionStaffRole.id
+        ) && (await guildMember.roles.remove(thailandDivisionStaffRole));
       }
-      console.log(`[${guildMember.user.id}] TH Staff Role Completed`);
       if (validOtherDivisionStaff.length > 0) {
-        await guildMember.roles.add(otherDivisionStaffRole);
+        guildMember.roles.cache.some(
+          (r) => r.id === otherDivisionStaffRole.id
+        ) || (await guildMember.roles.add(otherDivisionStaffRole));
       } else {
-        await guildMember.roles.remove(otherDivisionStaffRole);
+        guildMember.roles.cache.some(
+          (r) => r.id === otherDivisionStaffRole.id
+        ) && (await guildMember.roles.remove(otherDivisionStaffRole));
       }
-      console.log(`[${guildMember.user.id}] Other Staff Role Completed`);
       if (validHQStaff.length > 0) {
-        await guildMember.roles.add(hqStaffRole);
+        guildMember.roles.cache.some((r) => r.id === hqStaffRole.id) ||
+          (await guildMember.roles.add(hqStaffRole));
       } else {
-        await guildMember.roles.remove(hqStaffRole);
+        guildMember.roles.cache.some((r) => r.id === hqStaffRole.id) &&
+          (await guildMember.roles.remove(hqStaffRole));
       }
-      console.log(`[${guildMember.user.id}] HQ Staff Role Completed`);
     } else {
       prefix = userData.vid;
-      await guildMember.roles.remove(thailandDivisionStaffRole);
-      await guildMember.roles.remove(otherDivisionStaffRole);
-      await guildMember.roles.remove(hqStaffRole);
-      console.log(`[${guildMember.user.id}] All Staff Roles Completed`);
+      guildMember.roles.cache.some(
+        (r) => r.id === thailandDivisionStaffRole.id
+      ) && (await guildMember.roles.remove(thailandDivisionStaffRole));
+      guildMember.roles.cache.some((r) => r.id === otherDivisionStaffRole.id) &&
+        (await guildMember.roles.remove(otherDivisionStaffRole));
+      guildMember.roles.cache.some((r) => r.id === hqStaffRole.id) &&
+        (await guildMember.roles.remove(hqStaffRole));
     }
     let newNickname = `${prefix} ${suffix}`;
     if (userData.division !== 'TH') {
       newNickname = newNickname.substr(0, 27) + ` - ${userData.division}`;
-      await guildMember.roles.add(otherDivisionRole);
-      await guildMember.roles.remove(thailandDivisionRole);
+      guildMember.roles.cache.some((r) => r.id === otherDivisionRole.id) ||
+        (await guildMember.roles.add(otherDivisionRole));
+      guildMember.roles.cache.some((r) => r.id === thailandDivisionRole.id) &&
+        (await guildMember.roles.remove(thailandDivisionRole));
     } else {
-      await guildMember.roles.add(thailandDivisionRole);
-      await guildMember.roles.remove(otherDivisionRole);
+      guildMember.roles.cache.some((r) => r.id === thailandDivisionRole.id) ||
+        (await guildMember.roles.add(thailandDivisionRole));
+      guildMember.roles.cache.some((r) => r.id === otherDivisionRole.id) &&
+        (await guildMember.roles.remove(otherDivisionRole));
     }
-    console.log(`[${guildMember.user.id}] Division Role Completed`);
     if (newNickname !== guildMember.nickname) {
       try {
         await guildMember.setNickname(newNickname.substr(0, 32));
@@ -92,18 +105,27 @@ export const updateGuildMember = async (
         }
       }
     }
-    await guildMember.roles.remove(unverifiedRole);
-    await guildMember.roles.add(verifiedRole);
+    guildMember.roles.cache.some((r) => r.id === unverifiedRole.id) &&
+      (await guildMember.roles.remove(unverifiedRole));
+    guildMember.roles.cache.some((r) => r.id === verifiedRole.id) ||
+      (await guildMember.roles.add(verifiedRole));
   } else {
     if (!guildMember.roles.cache.some((r) => r.id === botRole.id)) {
-      await guildMember.roles.remove(verifiedRole);
-      await guildMember.roles.remove(thailandDivisionRole);
-      await guildMember.roles.remove(otherDivisionRole);
-      await guildMember.roles.remove(thailandDivisionStaffRole);
-      await guildMember.roles.remove(otherDivisionStaffRole);
-      await guildMember.roles.remove(hqStaffRole);
-      await guildMember.roles.add(unverifiedRole);
-      console.log(`[${guildMember.user.id}] Unverified Role Completed`);
+      guildMember.roles.cache.some((r) => r.id === verifiedRole.id) &&
+        (await guildMember.roles.remove(verifiedRole));
+      guildMember.roles.cache.some((r) => r.id === thailandDivisionRole.id) &&
+        (await guildMember.roles.remove(thailandDivisionRole));
+      guildMember.roles.cache.some((r) => r.id === otherDivisionRole.id) &&
+        (await guildMember.roles.remove(otherDivisionRole));
+      guildMember.roles.cache.some(
+        (r) => r.id === thailandDivisionStaffRole.id
+      ) && (await guildMember.roles.remove(thailandDivisionStaffRole));
+      guildMember.roles.cache.some((r) => r.id === otherDivisionStaffRole.id) &&
+        (await guildMember.roles.remove(otherDivisionStaffRole));
+      guildMember.roles.cache.some((r) => r.id === hqStaffRole.id) &&
+        (await guildMember.roles.remove(hqStaffRole));
+      guildMember.roles.cache.some((r) => r.id === unverifiedRole.id) ||
+        (await guildMember.roles.add(unverifiedRole));
       const nickname = `[UNVERIFIED] ${guildMember.user.username}`.substr(
         0,
         32
@@ -114,6 +136,6 @@ export const updateGuildMember = async (
     }
   }
   console.log(
-    `Updated ${guildMember.user.username}#${guildMember.user.discriminator}`
+    `Updated ${guildMember.user.username}#${guildMember.user.discriminator} (${guildMember.user.id})`
   );
 };
