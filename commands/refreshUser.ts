@@ -17,7 +17,7 @@ export const handleRefreshUser = async (
   botRole: Discord.Role
 ): Promise<void> => {
   const authorId = message.author.id;
-  if (await isAdmin(authorId)) {
+  if (message.webhookID || (await isAdmin(authorId))) {
     const userId = message.content.slice(12).trim();
     const user = await client.users.fetch(userId);
     const member = await guild.members.fetch(user);
