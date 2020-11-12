@@ -13,7 +13,7 @@ export const handleVerify = async (
 
     Please click the link below to link your VID with Discord.
 
-    https://l.th.ivao.aero/discord-invite`);
+    https://l.th.ivao.aero/discordInvite`);
 
   const entry = log.entry(
     undefined,
