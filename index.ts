@@ -140,7 +140,7 @@ client.on('ready', () => {
         unverifiedRole,
         botRole
       );
-      if (userData.data.success) {
+      if (userData.data.success === false) {
         await newMember.createDM().then((dm) => {
           return notifyNotLinked(dm);
         });
