@@ -15,7 +15,7 @@ export const handleMoveVoiceUsersCommand = async (
       toChannelId
     ) as Discord.VoiceChannel;
     if (!(fromChannel && toChannel)) {
-      message.channel.send('No such channels exists');
+      void message.channel.send('No such channels exists');
     } else {
       for (const [, m] of fromChannel.members) {
         await m.voice.setChannel(toChannel);

@@ -1,6 +1,5 @@
 import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
-import axios from 'axios';
 import { Log } from '@google-cloud/logging';
 
 export const handleVerify = async (

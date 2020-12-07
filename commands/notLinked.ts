@@ -12,7 +12,7 @@ export const handleNotLinked = async (
     for (const [, member] of guild.members.cache) {
       if (!member.roles.cache.some((r) => r.id === verifiedRole.id)) {
         await member.createDM().then((dm) => {
-          notifyNotLinked(dm);
+          void notifyNotLinked(dm);
         });
       }
     }
