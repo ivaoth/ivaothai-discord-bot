@@ -1,67 +1,13 @@
-before_script:
-  ##
-  ## Install ssh-agent if not already installed, it is required by Docker.
-  ## (change apt-get to yum if you use an RPM-based image)
-  ##
-  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-
-  ##
-  ## Run ssh-agent (inside the build environment)
-  ##
-  - eval $(ssh-agent -s)
-
-  ##
-  ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
-  ## We're using tr to fix line endings which makes ed25519 keys work
-  ## without extra base64 encoding.
-  ## https://gitlab.com/gitlab-examples/ssh-private-key/issues/1#note_48526556
-  ##
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
-
-  ##
-  ## Create the SSH directory and give it the right permissions
-  ##
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-
-  ##
-  ## Optionally, if you will be using any Git commands, set the user name and
-  ## and email.
-  ##
-  #- git config --global user.email "user@example.com"
-  #- git config --global user.name "User name"
-
-  ##
-  ## Assuming you created the SSH_KNOWN_HOSTS variable, uncomment the
-  ## following two lines.
-  ##
-  - echo "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
-
-  ##
-  ## Alternatively, use ssh-keyscan to scan the keys of your private server.
-  ## Replace example.com with your private server's domain name. Repeat that
-  ## command if you have more than one server to connect to.
-  ##
-  #- ssh-keyscan example.com >> ~/.ssh/known_hosts
-  #- chmod 644 ~/.ssh/known_hosts
-
-  ##
-  ## You can optionally disable host key checking. Be aware that by adding that
-  ## you are susceptible to man-in-the-middle attacks.
-  ## WARNING: Use this only with the Docker executor, if you use it with shell
-  ## you will overwrite your user's SSH config.
-  ##
-  #- '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-
-deploy:
-  image: ubuntu:latest
+build-docker:
+  image: docker:stable
+  services:
+    - docker:dind
   only:
     - master
+  stage: build-docker
   script:
-    - apt-get update
-    - apt-get install -y git
-    - git push -f -q dokku@server1.sarunint.com:ivao-discord-bot HEAD:master
-  stage: deploy
+    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
+    - docker build . -t $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 stages:
-  - deploy
+  - build-docker
