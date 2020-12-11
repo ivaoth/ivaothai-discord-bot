@@ -4,6 +4,9 @@ metadata:
   name: {{ include "helm.fullname" . }}
   labels:
     {{- include "helm.labels" . | nindent 4 }}
+  annotations:
+    app.gitlab.com/env: {{ .Values.GitLab.env }}
+    app.gitlab.com/app: {{ .Values.GitLab.app }}
 spec:
   selector:
     matchLabels:
