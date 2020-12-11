@@ -15,7 +15,7 @@ deploy:
     name: dtzar/helm-kubectl:latest
   script:
     - kubectl create secret docker-registry gitlab-registry --docker-server="$CI_REGISTRY" --docker-username="$CI_DEPLOY_USER" --docker-password="$CI_DEPLOY_PASSWORD" --docker-email="$GITLAB_USER_EMAIL" -o yaml --dry-run=client | kubectl apply -f -
-    - helm upgrade --install ivaoth-discord-bot ./helm/ -f $VALUES_YAML --set image.tag=$CI_COMMIT_SHA
+    - helm upgrade --install ivaoth-discord-bot ./helm/ -f $VALUES_YAML --set image.tag=$CI_COMMIT_SHA,GitLab.app=$CI_PROJECT_PATH_SLUG,GitLab.env=$CI_ENVIRONMENT_SLOG
   environment:
     name: production
   only:
