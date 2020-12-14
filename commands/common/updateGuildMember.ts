@@ -20,7 +20,6 @@ export const updateGuildMember = async (
   otherDivisionStaffRole: Discord.Role,
   hqStaffRole: Discord.Role,
   unverifiedRole: Discord.Role,
-  botRole: Discord.Role,
   notifyServerOwner = false
 ): Promise<void> => {
   let suffix: string;
@@ -68,10 +67,8 @@ export const updateGuildMember = async (
     }
     roles.push(verifiedRole);
   } else {
-    if (!guildMember.roles.cache.some((r) => r.id === botRole.id)) {
-      roles.push(unverifiedRole);
-      newNickname = `[UNVERIFIED] ${guildMember.user.username}`.substr(0, 32);
-    }
+    roles.push(unverifiedRole);
+    newNickname = `[UNVERIFIED] ${guildMember.user.username}`.substr(0, 32);
   }
   await guildMember.roles.set(roles);
   if (newNickname !== guildMember.nickname) {
