@@ -50,3 +50,4 @@ appConfig:
   BOT_TOKEN: ""
   API_KEY: ""
   MANAGED_ROLES: ""
+  BOT_ROLE: ""

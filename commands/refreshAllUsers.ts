@@ -13,6 +13,7 @@ export const handleRefreshAllUsers = async (
   otherDivisionStaffRole: Discord.Role,
   hqDivisionStaffRole: Discord.Role,
   unverifiedRole: Discord.Role,
+  botRole: Discord.Role,
   managedRoles: string[]
 ): Promise<void> => {
   const authorId = message.author.id;
@@ -22,28 +23,25 @@ export const handleRefreshAllUsers = async (
         return (async (): Promise<void> => {
           const user = member.user;
           const uid = user.id;
-          if (uid !== message.client.user!.id) {
-            const userData = await getUserData(uid);
-            if (userData.status === 'success') {
-              await updateGuildMember(
-                userData.data,
-                member,
-                verifiedRole,
-                thailandDivisionRole,
-                otherDivisionRole,
-                thailandDivisionStaffRole,
-                otherDivisionStaffRole,
-                hqDivisionStaffRole,
-                unverifiedRole,
-                managedRoles
-              );
-            } else {
-              await message.channel.send(
-                `Data fetch failed for ${user.username}#${user.discriminator} (${uid})`
-              );
-            }
+          const userData = await getUserData(uid);
+          if (userData.status === 'success') {
+            await updateGuildMember(
+              userData.data,
+              member,
+              verifiedRole,
+              thailandDivisionRole,
+              otherDivisionRole,
+              thailandDivisionStaffRole,
+              otherDivisionStaffRole,
+              hqDivisionStaffRole,
+              unverifiedRole,
+              botRole,
+              managedRoles
+            );
           } else {
-            console.log('We are skipping ourselves.');
+            await message.channel.send(
+              `Data fetch failed for ${user.username}#${user.discriminator} (${uid})`
+            );
           }
         })();
       })

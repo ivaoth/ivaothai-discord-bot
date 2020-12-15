@@ -52,6 +52,7 @@ client.on('ready', () => {
   const unverifiedRole = guild.roles.cache.get(
     process.env['UNVERIFIED_ROLE'] as string
   )!;
+  const botRole = guild.roles.cache.get(process.env['BOT_ROLE'] as string)!;
   const announcementChannel = guild.channels.cache.get(
     process.env['ANNOUNCEMENT_CHANNEL'] as string
   )! as Discord.TextChannel;
@@ -82,6 +83,7 @@ client.on('ready', () => {
             otherDivisionStaffRole,
             hqStaffRole,
             unverifiedRole,
+            botRole,
             managedRoles
           );
         } else if (message.content === '!notifyNotLinked') {
@@ -97,6 +99,7 @@ client.on('ready', () => {
             otherDivisionStaffRole,
             hqStaffRole,
             unverifiedRole,
+            botRole,
             managedRoles
           );
         } else if (message.content === '!refreshProfile') {
@@ -125,6 +128,7 @@ client.on('ready', () => {
             otherDivisionStaffRole,
             hqStaffRole,
             unverifiedRole,
+            botRole,
             managedRoles
           );
         }
@@ -146,6 +150,7 @@ client.on('ready', () => {
           otherDivisionStaffRole,
           hqStaffRole,
           unverifiedRole,
+          botRole,
           managedRoles
         );
         if (userData.data.success === false) {

@@ -17,3 +17,4 @@ data:
   BOT_TOKEN: {{ quote .Values.appConfig.BOT_TOKEN }}
   API_KEY: {{ quote .Values.appConfig.API_KEY }}
   MANAGED_ROLES: {{ quote .Values.appConfig.MANAGED_ROLES }}
+  BOT_ROLE: {{ quote .Values.appConfig.BOT_ROLE }}

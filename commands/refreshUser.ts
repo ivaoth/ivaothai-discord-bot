@@ -14,6 +14,7 @@ export const handleRefreshUser = async (
   otherDivisionStaffRole: Discord.Role,
   hqStaffRole: Discord.Role,
   unverifiedRole: Discord.Role,
+  botRole: Discord.Role,
   managedRoles: string[]
 ): Promise<void> => {
   const authorId = message.author.id;
@@ -33,6 +34,7 @@ export const handleRefreshUser = async (
         otherDivisionStaffRole,
         hqStaffRole,
         unverifiedRole,
+        botRole,
         managedRoles
       );
     } else {
