@@ -18,7 +18,7 @@ export const handleRefreshAllUsers = async (
   const authorId = message.author.id;
   if (await isAdmin(authorId)) {
     await Promise.all(
-      guild.members.cache.map(async (member) => {
+      (await guild.members.fetch()).map(async (member) => {
         return (async (): Promise<void> => {
           const user = member.user;
           const uid = user.id;
