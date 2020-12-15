@@ -1,51 +1,13 @@
 import * as Discord from 'discord.js';
 import { isAdmin } from '../utils/checkAdmin';
-import { updateGuildMember } from './common/updateGuildMember';
-import { getUserData } from '../utils/getUserData';
+import { refreshAllUsers } from '../utils/refreshUser';
 
 export const handleRefreshAllUsers = async (
-  message: Discord.Message,
-  guild: Discord.Guild,
-  verifiedRole: Discord.Role,
-  thailandDivisionRole: Discord.Role,
-  otherDivisionRole: Discord.Role,
-  thailandDivisionStaffRole: Discord.Role,
-  otherDivisionStaffRole: Discord.Role,
-  hqDivisionStaffRole: Discord.Role,
-  unverifiedRole: Discord.Role,
-  botRole: Discord.Role,
-  managedRoles: string[]
+  message: Discord.Message
 ): Promise<void> => {
   const authorId = message.author.id;
   if (await isAdmin(authorId)) {
-    await Promise.all(
-      (await guild.members.fetch()).map(async (member) => {
-        return (async (): Promise<void> => {
-          const user = member.user;
-          const uid = user.id;
-          const userData = await getUserData(uid);
-          if (userData.status === 'success') {
-            await updateGuildMember(
-              userData.data,
-              member,
-              verifiedRole,
-              thailandDivisionRole,
-              otherDivisionRole,
-              thailandDivisionStaffRole,
-              otherDivisionStaffRole,
-              hqDivisionStaffRole,
-              unverifiedRole,
-              botRole,
-              managedRoles
-            );
-          } else {
-            await message.channel.send(
-              `Data fetch failed for ${user.username}#${user.discriminator} (${uid})`
-            );
-          }
-        })();
-      })
-    );
+    await refreshAllUsers();
     await message.channel.send('All users updated');
   } else {
     await message.channel.send(

@@ -2,8 +2,6 @@ import { Logging } from '@google-cloud/logging';
 import * as Discord from 'discord.js';
 import { CredentialBody } from 'google-auth-library';
 import { handleBroadcastCommand } from './commands/broadcast';
-import { notifyNotLinked } from './commands/common/notifyNotLinked';
-import { updateGuildMember } from './commands/common/updateGuildMember';
 import { handleElse } from './commands/else';
 import { printHelp } from './commands/help';
 import { handleMoveVoiceUsersCommand } from './commands/moveVoiceUsers';
@@ -13,7 +11,7 @@ import { handleRefreshAllUsers } from './commands/refreshAllUsers';
 import { handleRefreshProfile } from './commands/refreshProfile';
 import { handleRefreshUser } from './commands/refreshUser';
 import { handleVerify } from './commands/verify';
-import { getUserData } from './utils/getUserData';
+import { refreshUser } from './utils/refreshUser';
 
 const client = new Discord.Client();
 
@@ -34,29 +32,9 @@ client.on('ready', () => {
   const verifiedRole = guild.roles.cache.get(
     process.env['VERIFIED_ROLE'] as string
   )!;
-  const thailandDivisionRole = guild.roles.cache.get(
-    process.env['THAILAND_DIVISION_ROLE'] as string
-  )!;
-  const otherDivisionRole = guild.roles.cache.get(
-    process.env['OTHER_DIVISION_ROLE'] as string
-  )!;
-  const thailandDivisionStaffRole = guild.roles.cache.get(
-    process.env['THAILAND_DIVISION_STAFF_ROLE'] as string
-  )!;
-  const otherDivisionStaffRole = guild.roles.cache.get(
-    process.env['OTHER_DIVISION_STAFF_ROLE'] as string
-  )!;
-  const hqStaffRole = guild.roles.cache.get(
-    process.env['HQ_STAFF_ROLE'] as string
-  )!;
-  const unverifiedRole = guild.roles.cache.get(
-    process.env['UNVERIFIED_ROLE'] as string
-  )!;
-  const botRole = guild.roles.cache.get(process.env['BOT_ROLE'] as string)!;
   const announcementChannel = guild.channels.cache.get(
     process.env['ANNOUNCEMENT_CHANNEL'] as string
   )! as Discord.TextChannel;
-  const managedRoles = process.env['MANAGED_ROLES']!.split(':');
   const entry = log.entry(undefined, 'Bot started');
   void log.write(entry);
 
@@ -72,36 +50,11 @@ client.on('ready', () => {
         } else if (message.content.startsWith('!nickname')) {
           await handleNicknameChange(message, log);
         } else if (message.content.startsWith('!refreshUser')) {
-          await handleRefreshUser(
-            message,
-            client,
-            guild,
-            verifiedRole,
-            thailandDivisionRole,
-            otherDivisionRole,
-            thailandDivisionStaffRole,
-            otherDivisionStaffRole,
-            hqStaffRole,
-            unverifiedRole,
-            botRole,
-            managedRoles
-          );
+          await handleRefreshUser(message);
         } else if (message.content === '!notifyNotLinked') {
           await handleNotLinked(message, guild, verifiedRole);
         } else if (message.content === '!refreshAllUsers') {
-          await handleRefreshAllUsers(
-            message,
-            guild,
-            verifiedRole,
-            thailandDivisionRole,
-            otherDivisionRole,
-            thailandDivisionStaffRole,
-            otherDivisionStaffRole,
-            hqStaffRole,
-            unverifiedRole,
-            botRole,
-            managedRoles
-          );
+          await handleRefreshAllUsers(message);
         } else if (message.content === '!refreshProfile') {
           await handleRefreshProfile(client, guild);
         } else if (message.content.startsWith('!moveVoiceUsers')) {
@@ -116,49 +69,14 @@ client.on('ready', () => {
   client.on('guildMemberUpdate', (oldMember, newMember) => {
     void (async () => {
       if (oldMember.nickname !== newMember.nickname) {
-        const userData = await getUserData(newMember.user.id);
-        if (userData.status === 'success') {
-          await updateGuildMember(
-            userData.data,
-            newMember,
-            verifiedRole,
-            thailandDivisionRole,
-            otherDivisionRole,
-            thailandDivisionRole,
-            otherDivisionStaffRole,
-            hqStaffRole,
-            unverifiedRole,
-            botRole,
-            managedRoles
-          );
-        }
+        await refreshUser(newMember.user.id);
       }
     })();
   });
 
   client.on('guildMemberAdd', (newMember) => {
     void (async () => {
-      const userData = await getUserData(newMember.user.id);
-      if (userData.status === 'success') {
-        await updateGuildMember(
-          userData.data,
-          newMember,
-          verifiedRole,
-          thailandDivisionRole,
-          otherDivisionRole,
-          thailandDivisionStaffRole,
-          otherDivisionStaffRole,
-          hqStaffRole,
-          unverifiedRole,
-          botRole,
-          managedRoles
-        );
-        if (userData.data.success === false) {
-          await newMember.createDM().then((dm) => {
-            return notifyNotLinked(dm);
-          });
-        }
-      }
+      await refreshUser(newMember.user.id);
     })();
   });
 });

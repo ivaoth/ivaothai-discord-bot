@@ -1,45 +1,14 @@
 import * as Discord from 'discord.js';
 import { isAdmin } from '../utils/checkAdmin';
-import { updateGuildMember } from './common/updateGuildMember';
-import { getUserData } from '../utils/getUserData';
+import { refreshUser } from '../utils/refreshUser';
 
 export const handleRefreshUser = async (
-  message: Discord.Message,
-  client: Discord.Client,
-  guild: Discord.Guild,
-  verifiedRole: Discord.Role,
-  thailandDivisionRole: Discord.Role,
-  otherDivisionRole: Discord.Role,
-  thailandDivisionStaffRole: Discord.Role,
-  otherDivisionStaffRole: Discord.Role,
-  hqStaffRole: Discord.Role,
-  unverifiedRole: Discord.Role,
-  botRole: Discord.Role,
-  managedRoles: string[]
+  message: Discord.Message
 ): Promise<void> => {
   const authorId = message.author.id;
   if (message.webhookID || (await isAdmin(authorId))) {
     const userId = message.content.slice(12).trim();
-    const user = await client.users.fetch(userId);
-    const member = await guild.members.fetch(user);
-    const userData = await getUserData(userId);
-    if (userData.status === 'success') {
-      await updateGuildMember(
-        userData.data,
-        member,
-        verifiedRole,
-        thailandDivisionRole,
-        otherDivisionRole,
-        thailandDivisionStaffRole,
-        otherDivisionStaffRole,
-        hqStaffRole,
-        unverifiedRole,
-        botRole,
-        managedRoles
-      );
-    } else {
-      await message.channel.send('API Error');
-    }
+    await refreshUser(userId);
   } else {
     await message.channel.send(
       'You are not in the list of admins, please do not try this command.'
