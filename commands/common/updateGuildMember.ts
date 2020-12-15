@@ -20,11 +20,14 @@ export const updateGuildMember = async (
   otherDivisionStaffRole: Discord.Role,
   hqStaffRole: Discord.Role,
   unverifiedRole: Discord.Role,
+  managedRoles: string[],
   notifyServerOwner = false
 ): Promise<void> => {
   let suffix: string;
   let prefix: string;
-  const roles: Discord.Role[] = [];
+  const roles = (await guildMember.fetch(true)).roles.cache
+    .filter((r) => managedRoles.indexOf(r.id) === -1)
+    .array();
   let newNickname = '';
   if (userData.success) {
     if (userData.customNickname) {

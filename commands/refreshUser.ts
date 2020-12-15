@@ -13,7 +13,8 @@ export const handleRefreshUser = async (
   thailandDivisionStaffRole: Discord.Role,
   otherDivisionStaffRole: Discord.Role,
   hqStaffRole: Discord.Role,
-  unverifiedRole: Discord.Role
+  unverifiedRole: Discord.Role,
+  managedRoles: string[]
 ): Promise<void> => {
   const authorId = message.author.id;
   if (message.webhookID || (await isAdmin(authorId))) {
@@ -31,7 +32,8 @@ export const handleRefreshUser = async (
         thailandDivisionStaffRole,
         otherDivisionStaffRole,
         hqStaffRole,
-        unverifiedRole
+        unverifiedRole,
+        managedRoles
       );
     } else {
       await message.channel.send('API Error');

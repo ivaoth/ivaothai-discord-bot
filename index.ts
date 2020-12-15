@@ -55,6 +55,7 @@ client.on('ready', () => {
   const announcementChannel = guild.channels.cache.get(
     process.env['ANNOUNCEMENT_CHANNEL'] as string
   )! as Discord.TextChannel;
+  const managedRoles = process.env['MANAGED_ROLES']!.split(':');
   const entry = log.entry(undefined, 'Bot started');
   void log.write(entry);
 
@@ -80,7 +81,8 @@ client.on('ready', () => {
             thailandDivisionStaffRole,
             otherDivisionStaffRole,
             hqStaffRole,
-            unverifiedRole
+            unverifiedRole,
+            managedRoles
           );
         } else if (message.content === '!notifyNotLinked') {
           await handleNotLinked(message, guild, verifiedRole);
@@ -94,7 +96,8 @@ client.on('ready', () => {
             thailandDivisionStaffRole,
             otherDivisionStaffRole,
             hqStaffRole,
-            unverifiedRole
+            unverifiedRole,
+            managedRoles
           );
         } else if (message.content === '!refreshProfile') {
           await handleRefreshProfile(client, guild);
@@ -121,7 +124,8 @@ client.on('ready', () => {
             thailandDivisionRole,
             otherDivisionStaffRole,
             hqStaffRole,
-            unverifiedRole
+            unverifiedRole,
+            managedRoles
           );
         }
       }
@@ -141,7 +145,8 @@ client.on('ready', () => {
           thailandDivisionStaffRole,
           otherDivisionStaffRole,
           hqStaffRole,
-          unverifiedRole
+          unverifiedRole,
+          managedRoles
         );
         if (userData.data.success === false) {
           await newMember.createDM().then((dm) => {

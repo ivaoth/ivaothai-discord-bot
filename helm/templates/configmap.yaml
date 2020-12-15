@@ -13,7 +13,7 @@ data:
   OTHER_DIVISION_STAFF_ROLE: {{ quote .Values.appConfig.OTHER_DIVISION_STAFF_ROLE }}
   HQ_STAFF_ROLE: {{ quote .Values.appConfig.HQ_STAFF_ROLE }}
   UNVERIFIED_ROLE: {{ quote .Values.appConfig.UNVERIFIED_ROLE }}
-  BOT_ROLE: {{ quote .Values.appConfig.BOT_ROLE }}
   ANNOUNCEMENT_CHANNEL: {{ quote .Values.appConfig.ANNOUNCEMENT_CHANNEL }}
   BOT_TOKEN: {{ quote .Values.appConfig.BOT_TOKEN }}
   API_KEY: {{ quote .Values.appConfig.API_KEY }}
+  MANAGED_ROLES: {{ quote .Value.appConfig.MANAGED_ROLES }}
