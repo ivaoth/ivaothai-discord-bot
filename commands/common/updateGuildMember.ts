@@ -27,7 +27,7 @@ export const updateGuildMember = async (
   if (guildMember.roles.cache.every((r) => r.id !== botRole.id)) {
     let suffix: string;
     let prefix: string;
-    const roles = (await guildMember.fetch(true)).roles.cache
+    const roles = (await guildMember.fetch()).roles.cache
       .filter((r) => managedRoles.indexOf(r.id) === -1)
       .array();
     let newNickname = '';
@@ -75,7 +75,14 @@ export const updateGuildMember = async (
       roles.push(unverifiedRole);
       newNickname = `[UNVERIFIED] ${guildMember.user.username}`.substr(0, 32);
     }
-    await guildMember.roles.set(roles);
+    const oldRolesId = guildMember.roles.cache.map((r) => r.id);
+    const newRolesId = roles.map((r) => r.id);
+    if (
+      oldRolesId.filter((r) => !newRolesId.includes(r)).length > 0 ||
+      newRolesId.filter((r) => !oldRolesId.includes(r)).length > 0
+    ) {
+      await guildMember.roles.set(roles);
+    }
     if (newNickname !== guildMember.nickname) {
       try {
         await guildMember.setNickname(newNickname.substr(0, 32));
