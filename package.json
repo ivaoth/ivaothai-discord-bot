@@ -22,7 +22,7 @@
     "erlpack": "0.1.3",
     "injection-js": "^2.2.1",
     "left-pad": "1.3.0",
-    "table": "6.0.7",
+    "table": "6.0.9",
     "zlib-sync": "0.1.7"
   },
   "devDependencies": {
