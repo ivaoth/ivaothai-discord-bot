@@ -6,7 +6,7 @@ export const handleRefreshUser = async (
   message: Discord.Message
 ): Promise<void> => {
   const authorId = message.author.id;
-  if (message.webhookID || (await isAdmin(authorId))) {
+  if (message.webhookId || (await isAdmin(authorId))) {
     const userId = message.content.slice(12).trim();
     await refreshUser(userId);
   } else {

@@ -13,7 +13,12 @@ import { handleRefreshUser } from './commands/refreshUser';
 import { handleVerify } from './commands/verify';
 import { refreshUser } from './utils/refreshUser';
 
-const client = new Discord.Client();
+const client = new Discord.Client({
+  intents:
+    Discord.Intents.FLAGS.GUILD_MEMBERS |
+    Discord.Intents.FLAGS.GUILD_MESSAGES |
+    Discord.Intents.FLAGS.DIRECT_MESSAGES
+});
 
 const logging = new Logging({
   projectId: process.env['GOOGLE_CLOUD_PROJECT'],
@@ -38,7 +43,7 @@ client.on('ready', () => {
   const entry = log.entry(undefined, 'Bot started');
   void log.write(entry);
 
-  client.on('message', (message) => {
+  client.on('messageCreate', (message) => {
     void (async () => {
       if (message.author.id !== client.user!.id) {
         if (message.content === '!verify') {
