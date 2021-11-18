@@ -17,7 +17,7 @@
   "dependencies": {
     "@google-cloud/logging": "9.5.5",
     "axios": "^0.21.0",
-    "common-tags": "1.8.0",
+    "common-tags": "1.8.2",
     "discord.js": "^12.0.0",
     "erlpack": "github:discord/erlpack#f7d730debe32c416d1b55b4217f8aef2ade05874",
     "injection-js": "^2.2.1",
