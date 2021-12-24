@@ -29,7 +29,7 @@
     "@types/common-tags": "1.8.1",
     "@types/node": "16.11.10",
     "@types/table": "6.0.0",
-    "@types/ws": "8.2.0",
+    "@types/ws": "8.2.2",
     "@typescript-eslint/eslint-plugin": "5.4.0",
     "@typescript-eslint/parser": "5.4.0",
     "dotenv": "10.0.0",
