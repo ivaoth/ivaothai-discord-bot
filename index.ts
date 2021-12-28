@@ -22,6 +22,15 @@ const client = new Discord.Client({
   partials: ['CHANNEL']
 });
 
+const logging = new Logging({
+  projectId: process.env['GOOGLE_CLOUD_PROJECT'],
+  credentials: JSON.parse(
+    process.env['GOOGLE_APPS_CREDENTIALS'] as string
+  ) as CredentialBody
+});
+
+const log = logging.log('ivao-th-bot');
+
 client.on('ready', () => {
   console.log('Bot is running');
   const guild = client.guilds.cache.get(
