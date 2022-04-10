@@ -16,7 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "@google-cloud/logging": "9.8.0",
-    "axios": "0.26.0",
+    "axios": "0.26.1",
     "common-tags": "1.8.2",
     "discord.js": "13.6.0",
     "erlpack": "github:discord/erlpack#3b793a333dd3f6a140b9168ea91e9fa9660753ce",
