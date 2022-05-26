@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@google-cloud/logging": "9.8.3",
+    "@google-cloud/logging": "10.0.2",
     "axios": "0.27.2",
     "common-tags": "1.8.2",
     "discord.js": "13.7.0",
