@@ -18,7 +18,7 @@
     "@google-cloud/logging": "10.1.1",
     "axios": "0.27.2",
     "common-tags": "1.8.2",
-    "discord.js": "13.8.1",
+    "discord.js": "13.9.1",
     "erlpack": "github:discord/erlpack#3b793a333dd3f6a140b9168ea91e9fa9660753ce",
     "injection-js": "2.4.0",
     "table": "6.8.0",
