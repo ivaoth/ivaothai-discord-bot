@@ -15,11 +15,11 @@ import { refreshUser } from './utils/refreshUser';
 
 const client = new Discord.Client({
   intents:
-    Discord.Intents.FLAGS.GUILD_MEMBERS |
-    Discord.Intents.FLAGS.GUILD_MESSAGES |
-    Discord.Intents.FLAGS.DIRECT_MESSAGES |
-    Discord.Intents.FLAGS.GUILDS,
-  partials: ['CHANNEL']
+    Discord.GatewayIntentBits.GuildMembers |
+    Discord.GatewayIntentBits.GuildMessages |
+    Discord.GatewayIntentBits.DirectMessages |
+    Discord.GatewayIntentBits.Guilds,
+  partials: [Discord.Partials.Channel]
 });
 
 const logging = new Logging({
