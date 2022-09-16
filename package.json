@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@types/common-tags": "1.8.1",
-    "@types/node": "16.11.46",
+    "@types/node": "16.11.59",
     "@types/table": "6.0.0",
     "@types/ws": "8.5.3",
     "@typescript-eslint/eslint-plugin": "5.31.0",
