@@ -43,3 +43,4 @@ appConfig:
   ANNOUNCEMENT_CHANNEL: ""
   BOT_TOKEN: ""
   API_KEY: ""
+  API_BASE_URI: ""

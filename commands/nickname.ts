@@ -7,7 +7,7 @@ export const handleNicknameChange = async (
   log: Log
 ): Promise<void> => {
   const newNickname = message.content.slice(9).trim();
-  const setNicknameUrl = new URL('https://sso.th.ivao.aero/setNickname');
+  const setNicknameUrl = new URL(`${process.env['API_BASE_URI']!}/setNickname`);
   await axios.patch(setNicknameUrl.href, {
     discord_id: message.author.id,
     nickname: newNickname,
