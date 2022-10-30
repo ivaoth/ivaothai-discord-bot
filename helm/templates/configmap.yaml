@@ -10,3 +10,4 @@ data:
   ANNOUNCEMENT_CHANNEL: {{ quote .Values.appConfig.ANNOUNCEMENT_CHANNEL }}
   BOT_TOKEN: {{ quote .Values.appConfig.BOT_TOKEN }}
   API_KEY: {{ quote .Values.appConfig.API_KEY }}
+  API_BASE_URI: {{ quote .Values.appConfig.API_BASE_URI }}
