@@ -22,7 +22,7 @@
     "erlpack": "github:discord/erlpack#cbe76be04c2210fc9cb6ff95910f0937c1011d04",
     "injection-js": "2.4.0",
     "table": "6.8.0",
-    "zlib-sync": "0.1.7"
+    "zlib-sync": "0.1.8"
   },
   "devDependencies": {
     "@types/common-tags": "1.8.1",
