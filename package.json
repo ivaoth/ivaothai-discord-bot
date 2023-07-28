@@ -15,31 +15,31 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.4.0",
+    "axios": "1.4.0",
     "common-tags": "1.8.2",
-    "discord.js": "^14.11.0",
+    "discord.js": "14.11.0",
     "erlpack": "github:discord/erlpack#cbe76be04c2210fc9cb6ff95910f0937c1011d04",
     "injection-js": "2.4.0",
-    "table": "^6.8.1",
-    "zlib-sync": "^0.1.8"
+    "table": "6.8.1",
+    "zlib-sync": "0.1.8"
   },
   "devDependencies": {
     "@types/common-tags": "1.8.1",
     "@types/node": "18.17.1",
-    "@types/table": "^6.3.2",
-    "@types/ws": "^8.5.4",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
+    "@types/table": "6.3.2",
+    "@types/ws": "8.5.5",
+    "@typescript-eslint/eslint-plugin": "6.2.0",
+    "@typescript-eslint/parser": "6.2.0",
     "dotenv": "16.3.1",
-    "eslint": "^8.40.0",
-    "eslint-config-prettier": "^8.8.0",
+    "eslint": "8.46.0",
+    "eslint-config-prettier": "8.9.0",
     "eslint-plugin-prettier": "5.0.0",
-    "prettier": "^3.0.0",
+    "prettier": "3.0.0",
     "ts-node": "10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "5.1.6"
   },
   "engines": {
-    "node": "18",
-    "npm": "*"
+    "node": "18.17.0",
+    "npm": "9.8.1"
   }
 }
