@@ -1,10 +1,8 @@
 import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
-import { Log } from '@google-cloud/logging';
 
 export const printHelp = async (
-  message: Discord.Message,
-  log: Log
+  message: Discord.Message
 ): Promise<void> => {
   await message.channel.send(
     stripIndents`
@@ -17,10 +15,4 @@ export const printHelp = async (
     \`!verify\`: Connect your VID to Discord
     \`!nickname <NewNickname>\`: Change your nickname in Discord`
   );
-
-  const entry = log.entry(
-    undefined,
-    `[help] received message from ${message.author.username}#${message.author.discriminator} (${message.author.id})`
-  );
-  await log.write(entry);
 };

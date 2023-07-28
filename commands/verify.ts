@@ -1,10 +1,8 @@
 import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
-import { Log } from '@google-cloud/logging';
 
 export const handleVerify = async (
-  message: Discord.Message,
-  log: Log
+  message: Discord.Message
 ): Promise<void> => {
   const dm = message.author.createDM();
   await (
@@ -15,10 +13,4 @@ export const handleVerify = async (
     Please click the link below to link your VID with Discord.
 
     https://l.th.ivao.aero/discordInvite`);
-
-  const entry = log.entry(
-    undefined,
-    `[verify] received message from ${message.author.username}#${message.author.discriminator} (${message.author.id})`
-  );
-  await log.write(entry);
 };

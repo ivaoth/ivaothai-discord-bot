@@ -1,6 +1,4 @@
-import { Logging } from '@google-cloud/logging';
 import * as Discord from 'discord.js';
-import { CredentialBody } from 'google-auth-library';
 import { handleBroadcastCommand } from './commands/broadcast';
 import { handleElse } from './commands/else';
 import { printHelp } from './commands/help';
@@ -22,15 +20,6 @@ const client = new Discord.Client({
   partials: [Discord.Partials.Channel]
 });
 
-const logging = new Logging({
-  projectId: process.env['GOOGLE_CLOUD_PROJECT'],
-  credentials: JSON.parse(
-    process.env['GOOGLE_APPS_CREDENTIALS'] as string
-  ) as CredentialBody
-});
-
-const log = logging.log('ivao-th-bot');
-
 client.on('ready', () => {
   console.log('Bot is running');
   const guild = client.guilds.cache.get(
@@ -42,20 +31,18 @@ client.on('ready', () => {
   const announcementChannel = guild.channels.cache.get(
     process.env['ANNOUNCEMENT_CHANNEL'] as string
   )! as Discord.TextChannel;
-  const entry = log.entry(undefined, 'Bot started');
-  void log.write(entry);
 
   client.on('messageCreate', (message) => {
     void (async () => {
       if (message.author.id !== client.user!.id) {
         if (message.content === '!verify') {
-          await handleVerify(message, log);
+          await handleVerify(message);
         } else if (message.content.startsWith('!broadcast')) {
           await handleBroadcastCommand(message, announcementChannel);
         } else if (message.content === '!help') {
-          await printHelp(message, log);
+          await printHelp(message);
         } else if (message.content.startsWith('!nickname')) {
-          await handleNicknameChange(message, log);
+          await handleNicknameChange(message);
         } else if (message.content.startsWith('!refreshUser')) {
           await handleRefreshUser(message);
         } else if (message.content === '!notifyNotLinked') {
