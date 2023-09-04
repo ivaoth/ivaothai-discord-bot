@@ -36,8 +36,6 @@ resources: {}
   #   memory: 128Mi
 
 appConfig:
-  GOOGLE_CLOUD_PROJECT: ""
-  GOOGLE_APPS_CREDENTIALS: ""
   IVAOTHAI_GUILD: ""
   VERIFIED_ROLE: ""
   ANNOUNCEMENT_CHANNEL: ""

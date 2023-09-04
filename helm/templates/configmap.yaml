@@ -3,8 +3,6 @@ apiVersion: v1
 metadata:
   name: {{ .Release.Name }}-configmap
 data:
-  GOOGLE_CLOUD_PROJECT: {{ quote .Values.appConfig.GOOGLE_CLOUD_PROJECT }}
-  GOOGLE_APPS_CREDENTIALS: {{ quote .Values.appConfig.GOOGLE_APPS_CREDENTIALS }}
   IVAOTHAI_GUILD: {{ quote .Values.appConfig.IVAOTHAI_GUILD }}
   VERIFIED_ROLE: {{ quote .Values.appConfig.VERIFIED_ROLE }}
   ANNOUNCEMENT_CHANNEL: {{ quote .Values.appConfig.ANNOUNCEMENT_CHANNEL }}
