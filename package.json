@@ -24,7 +24,7 @@
     "zlib-sync": "0.1.9"
   },
   "devDependencies": {
-    "@types/common-tags": "1.8.3",
+    "@types/common-tags": "1.8.4",
     "@types/node": "20.8.10",
     "@types/table": "6.3.2",
     "@types/ws": "8.5.8",
