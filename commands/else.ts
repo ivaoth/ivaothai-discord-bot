@@ -1,8 +1,8 @@
 import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
 
-export const handleElse = async (message: Discord.Message): Promise<void> => {
-  await message.channel.send(stripIndents`
+export const handleElse = async (message: Discord.OmitPartialGroupDMChannel<Discord.Message>): Promise<void> => {
+  await message.channel.send(stripIndents`F
     พิมพ์ \`!help\` เพื่อแสดงคำสั่งที่ใช้ได้
     Type \`!help\` to show available commands.`);
 };

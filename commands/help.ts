@@ -1,9 +1,7 @@
 import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
 
-export const printHelp = async (
-  message: Discord.Message
-): Promise<void> => {
+export const printHelp = async (message: Discord.OmitPartialGroupDMChannel<Discord.Message>): Promise<void> => {
   await message.channel.send(
     stripIndents`
     คำสั่งที่สามารถใช้ได้

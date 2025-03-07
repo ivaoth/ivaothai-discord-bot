@@ -1,9 +1,7 @@
 import * as Discord from 'discord.js';
 import { stripIndents } from 'common-tags';
 
-export const handleVerify = async (
-  message: Discord.Message
-): Promise<void> => {
+export const handleVerify = async (message: Discord.OmitPartialGroupDMChannel<Discord.Message>): Promise<void> => {
   const dm = message.author.createDM();
   await (
     await dm
