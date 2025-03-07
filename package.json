@@ -20,7 +20,7 @@
     "discord.js": "14.14.1",
     "erlpack": "github:discord/erlpack#b25ebd51ae4c097bd7f756fd4e1c841b61bfe50b",
     "injection-js": "2.4.0",
-    "table": "6.8.1",
+    "table": "6.9.0",
     "zlib-sync": "0.1.9"
   },
   "devDependencies": {
