@@ -21,7 +21,7 @@
     "erlpack": "github:discord/erlpack#936ba12231719af096fe1c37525e966f3690a225",
     "injection-js": "2.4.0",
     "table": "6.9.0",
-    "zlib-sync": "0.1.9"
+    "zlib-sync": "0.1.10"
   },
   "devDependencies": {
     "@eslint/js": "9.22.0",
