@@ -24,13 +24,13 @@
     "zlib-sync": "0.1.9"
   },
   "devDependencies": {
-    "@eslint/js": "9.22.0",
+    "@eslint/js": "9.31.0",
     "@types/common-tags": "1.8.4",
     "@types/node": "22.13.9",
     "@types/table": "6.3.2",
     "@types/ws": "8.18.0",
     "dotenv": "16.4.7",
-    "eslint": "9.22.0",
+    "eslint": "9.31.0",
     "eslint-config-prettier": "10.1.1",
     "eslint-plugin-prettier": "5.2.3",
     "prettier": "3.5.3",
