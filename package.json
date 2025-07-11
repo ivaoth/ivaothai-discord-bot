@@ -19,7 +19,7 @@
     "common-tags": "1.8.2",
     "discord.js": "14.18.0",
     "erlpack": "github:discord/erlpack#936ba12231719af096fe1c37525e966f3690a225",
-    "injection-js": "2.4.0",
+    "injection-js": "2.5.0",
     "table": "6.9.0",
     "zlib-sync": "0.1.9"
   },
