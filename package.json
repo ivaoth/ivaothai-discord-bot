@@ -17,7 +17,7 @@
   "dependencies": {
     "axios": "1.10.0",
     "common-tags": "1.8.2",
-    "discord.js": "14.21.0",
+    "discord.js": "14.25.1",
     "erlpack": "github:discord/erlpack#936ba12231719af096fe1c37525e966f3690a225",
     "injection-js": "2.5.0",
     "table": "6.9.0",
