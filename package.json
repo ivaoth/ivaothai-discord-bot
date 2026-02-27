@@ -15,7 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "1.10.0",
+    "axios": "1.13.5",
     "common-tags": "1.8.2",
     "discord.js": "14.21.0",
     "erlpack": "github:discord/erlpack#936ba12231719af096fe1c37525e966f3690a225",
