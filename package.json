@@ -18,7 +18,7 @@
     "axios": "1.10.0",
     "common-tags": "1.8.2",
     "discord.js": "14.21.0",
-    "erlpack": "github:discord/erlpack#936ba12231719af096fe1c37525e966f3690a225",
+    "erlpack": "github:discord/erlpack#2a4c0e832f3cd4e07c92d4baec326a631ed50f59",
     "injection-js": "2.5.0",
     "table": "6.9.0",
     "zlib-sync": "0.1.10"
